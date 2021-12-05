@@ -1,1 +1,3 @@
 C:\Users\jgh21\source\repos\보류\프로젝트\백업 12월 3일\Graphics\Debug\Graphics.exe
+C:\Users\jst99\OneDrive\바탕 화면\Escape\Debug\Graphics.exe
+C:\Users\jst99\OneDrive\바탕 화면\Escape\Debug\Graphics.pdb
