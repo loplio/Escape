@@ -1,6 +1,4 @@
 #include "ReadObj.h"
-#define F_ARRAY 20
-#define S_ARRAY 240000
 
 extern GLfloat TriObj[F_ARRAY][S_ARRAY][24];
 object* ReadObj(FILE* objFile, object* obj, int* TriNum)
@@ -11,6 +9,7 @@ object* ReadObj(FILE* objFile, object* obj, int* TriNum)
 	int normalNum = 0;
 	int faceNum = 0;
 	int objectNum = 0;
+	int mtlNum = 0;
 	while (!feof(objFile)) {
 		fscanf(objFile, "%s", count);
 		//printf("%s\n", count);
@@ -27,11 +26,13 @@ object* ReadObj(FILE* objFile, object* obj, int* TriNum)
 			memset(count, '\0', sizeof(count));
 			fscanf(objFile, "%s", count);
 		}
+		else if (count[0] == 'u' && count[1] == 's')
+			mtlNum += 1;
 		else if (count[0] == 's' && count[1] == '\0')
 			fscanf(objFile, "%s", count);
 		memset(count, '\0', sizeof(count));
 	}
-	printf("v:%d vn:%d f:%d object개수:%d\n", vertexNum, normalNum, faceNum, objectNum);
+	printf("v:%d vn:%d f:%d object개수:%d, usemtl개수:%d\n", vertexNum, normalNum, faceNum, objectNum, mtlNum);
 	glm::vec3* vertex;
 	glm::vec3* texture;
 	glm::vec3* normal;
@@ -42,7 +43,7 @@ object* ReadObj(FILE* objFile, object* obj, int* TriNum)
 	int faceIndex = 0;
 	int objIndex = 0;
 	int poly_face_n = 0, pfaceIndex = 0;
-	int t_n = 0;
+	int t_n = 0, g_polygon_MAX = 0;
 	obj = (object*)malloc(sizeof(object) * objectNum);
 	v = (glm::uvec4*)malloc(sizeof(glm::vec4) * faceNum);
 	t = (glm::uvec4*)malloc(sizeof(glm::vec4) * faceNum);
@@ -81,6 +82,12 @@ object* ReadObj(FILE* objFile, object* obj, int* TriNum)
 				obj[t_n].face_num = faceIndex - pfaceIndex;
 				poly_face_n = faceIndex - pfaceIndex;
 				pfaceIndex = faceIndex;
+				if (poly_face_n > g_polygon_MAX)
+					g_polygon_MAX = poly_face_n;
+				if (poly_face_n > S_ARRAY)
+					printf("/		TriObj Second Array overflow Error.(%d)		/\n", poly_face_n);
+				if (t_n > F_ARRAY)
+					printf("/		TriObj First Array overflow Error.(%d)		/\n", t_n);
 				for (int i = 0, j = faceIndex - poly_face_n; i < poly_face_n; i++, j++) {
 					TriObj[t_n][i][0] = vertex[v[j].x].x, TriObj[t_n][i][1] = vertex[v[j].x].y, TriObj[t_n][i][2] = vertex[v[j].x].z;
 					TriObj[t_n][i][3] = normal[n[j].x].x, TriObj[t_n][i][4] = normal[n[j].x].y, TriObj[t_n][i][5] = normal[n[j].x].z;
@@ -94,22 +101,28 @@ object* ReadObj(FILE* objFile, object* obj, int* TriNum)
 					TriObj[t_n][i][19] = normal[n[j].z].x, TriObj[t_n][i][20] = normal[n[j].z].y, TriObj[t_n][i][21] = normal[n[j].z].z;
 					TriObj[t_n][i][22] = texture[t[j].z].x, TriObj[t_n][i][23] = texture[t[j].z].y;
 				}
-				if (poly_face_n > S_ARRAY)
-					printf("/		TriObj Second Array overflow Error.(%d)		/\n", poly_face_n);
-				if (t_n > F_ARRAY)
-					printf("/		TriObj First Array overflow Error.(%d)		/\n", t_n);
 			}
 			if (bind[0] != '\0') {
 				memset(bind, '\0', sizeof(bind));
 				fscanf(objFile, "%s", bind);
-				strncpy(obj[objIndex].group_name, bind, 15);
+				obj[objIndex].group_name = (char*)malloc(sizeof(char) * strlen(bind));
+				strcpy(obj[objIndex].group_name, bind);
+				New_Info(&obj[objIndex].info);
 				printf("%s\n", obj[objIndex].group_name);
 				objIndex++;
 			}
 		}
+		else if (bind[0] == 'u' && bind[1] == 's') {
+			memset(bind, '\0', sizeof(bind));
+			fscanf(objFile, "%s", bind);
+			obj[objIndex-1].info.name = (char*)malloc(sizeof(char) * strlen(bind));
+			strcpy(obj[objIndex-1].info.name, bind);
+			//printf("usemtl:%s\n", obj[objIndex - 1].info.name);
+		}
 		if (faceIndex == faceNum)
 			memset(bind, '\0', sizeof(bind));
 	}
+	printf("Up to Second ARRAYS %d are in use\n", g_polygon_MAX);
 	*TriNum = objIndex;
 	free(v), free(t), free(n), free(vertex), free(normal);
 	return obj;

@@ -1,5 +1,4 @@
-﻿#define _CRT_SECURE_NO_WARNINGS
-#define	STB_IMAGE_IMPLEMENTATION
+﻿#define	STB_IMAGE_IMPLEMENTATION
 #include "system.h"
 GLint width = 1000, height = 500;
 GLuint s_program;
@@ -26,7 +25,7 @@ void main(int argc, char** argv)
 {
 	Window_Initializer(argc, argv);
 	// 세이더 읽어와서 세이더 프로그램 만들기
-	MakeFile("Obj/small_house/paw.obj");
+	MakeFile("Obj/vally/vally.obj", "Obj/vally/vally.mtl");
 	s_program = make_shaderProgram("vertex.glsl", "fragment.glsl");
 
 	InitBuffer();

@@ -1,13 +1,16 @@
 #include "Rendering.h"
 #include "ReadObj.h"
-#define SPEED 3
-glm::vec3 cameraPos(0.0f, 0.0f, 0.0f);
-glm::vec3 cameraDirection(0.0f, 0.0f, -1.0f);
+#define SPEED 10
+#define SPACEBAR 32
+glm::vec3 cameraPos(1600.0f, 100.0f, -1700.0f);
+glm::vec3 cameraDirection(1600.0f, 100.0f, -1701.0f);
+//glm::vec3 cameraPos(0.0f, 0.0f, 0.0f);
+//glm::vec3 cameraDirection(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp(0.0f, 1.0f, 0.0f);
 glm::mat4 view(1.0f);
 extern GLuint s_program;
 extern int width, height, Tri_Num;
-GLuint texture;
+GLuint texture[30];
 GLuint vao[16], vbo[31], objVao[200], objVbo[200];
 GLfloat Box_pos[72][3] = {
 	1.0, 1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, 1.0, -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0, 1.0, 1.0,
@@ -28,12 +31,13 @@ GLfloat floor_pos[12][3] = { 150.0, 0.0, 150.0, 0.0,1.0,0.0, -150.0, 0.0, 150.0,
 GLfloat line[6][3] = { 0.0,-400.0,0.0, 0.0,400.0,0.0, -400.0,0.0,0.0, 400.0,0.0,0.0, 0.0,0.0,-400.0, 0.0,0.0,400.0 };
 GLfloat shape_focus[16][3] = { 0.0,0.0,0.0, 12.0,5.0,0.0, 0.0,0.1,0.0, 0.0,0.35,0.0, -0.15,0.75,0.0, 0.15,0.75,0.0, };
 object* sphere;
-
+Mtl* InfoMTL;
 BOOL state_timer = TRUE, rotate_object, rotate_light, state_walk; //RT - Rect, Tri  SL - Solid, Line
 char dir_z, dir_y, dir_x, light_dir_y = 1;	//x,y,z 방향
 float axis_x, axis_y, light_axis_y, cameraRt_axis_y, cameraRt_axis_x;
 float Mouse_x, Mouse_y, buffer_rad1, buffer_rad2, rad_p1, rad_p2, DirCameraX, DirCameraZ;
 int special_key, KeyDownRL, KeyDownFB, keyRad;
+int image_Num, mtl_Num;
 enum keyDown {
 	F = 0, RF = 45,
 	R = 90, RB = 135,
@@ -49,7 +53,7 @@ GLvoid TransformFun()
 	glm::mat4 projection(1.0f);
 	glm::mat4 mvPos(1.0f);
 	glm::vec3 vPos(0.0f, 0.0f, 20.0f);
-	projection = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 2000.0f);
+	projection = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 500000.0f);
 	projection = glm::rotate(projection, glm::radians(cameraRt_axis_y), glm::vec3(1.0f, 0.0f, 0.0f));
 	projection = glm::rotate(projection, glm::radians(cameraRt_axis_x), glm::vec3(0.0f, 1.0f, 0.0f));
 	projection = glm::translate(projection, glm::vec3(0.0f, -30.0f, -20.0f));
@@ -97,14 +101,15 @@ GLvoid drawScene() //--- 콜백 함수: 그리기 콜백 함수
 	//R = glm::scale(S, glm::vec3(0.1f, 0.1f, 0.1f));
 	R = glm::scale(R, glm::vec3(40.0f, 40.0f, 40.0f));
 	R = glm::translate(R, glm::vec3(40.0f, 0.0, -40.0));
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture);
 	glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(R));
+	glActiveTexture(GL_TEXTURE0);
 	for (int n = 0; n < Tri_Num; n++) {
 		glBindVertexArray(objVao[n]);
+		glBindTexture(GL_TEXTURE_2D, texture[sphere[n].info.Index]);
 		for (int i = 0; i < sphere[n].face_num; i++) {				//기본 박스
 			glDrawArrays(GL_TRIANGLES, i * 3, 3);
 		}
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	//조명
@@ -127,6 +132,7 @@ void Update()
 	if (rotate_object) cameraRt_axis_y += 5;
 	if (rotate_light) light_axis_y += 3 * light_dir_y;
 	if (state_walk) cameraPos.x += DirCameraX, cameraPos.z += DirCameraZ, cameraDirection.x += DirCameraX, cameraDirection.z += DirCameraZ;
+	printf("cameraPos: %f  %f  %f\n", cameraPos.x, cameraPos.y, cameraPos.z);
 }
 void TimerFunction(int value)
 {
@@ -213,6 +219,9 @@ GLvoid Keyboard(unsigned char key, int x, int y)
 GLvoid KeyboardUp(unsigned char key, int x, int y)
 {
 	switch (key) {
+	case SPACEBAR:
+		cameraPos.y += 10, cameraDirection.y += 10;
+		break;
 	case 'w':
 		if (KeyDownFB == 0) {
 			KeyDownFB = -1;
@@ -280,6 +289,9 @@ void special(int key, int x, int y)
 {
 	special_key = key;
 	switch (key) {
+	case GLUT_KEY_CTRL_L:
+		cameraPos.y -= 10, cameraDirection.y -= 10;
+		break;
 	case GLUT_KEY_LEFT:
 		break;
 	case GLUT_KEY_RIGHT:
@@ -291,15 +303,17 @@ void special(int key, int x, int y)
 	}
 	glutPostRedisplay();
 }
-void MakeFile(const char* objfile)
+void MakeFile(const char* objfile, const char* mtlfile)
 {
-	FILE* Shape;
+	FILE* Shape, *MTL;
 	Shape = fopen(objfile, "rb");
-	if (Shape == NULL) {
+	MTL = fopen(mtlfile, "rb");
+	if (Shape == NULL || MTL == NULL) {
 		printf("File open failed...");
 		exit(1);
 	}
 	sphere = ReadObj(Shape, sphere, &Tri_Num);
+	InfoMTL = ReadMtl(MTL, sphere, Tri_Num, &image_Num, &mtl_Num);
 	fclose(Shape);
 }
 

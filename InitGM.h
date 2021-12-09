@@ -1,7 +1,7 @@
 #pragma once
-#define _CRT_SECURE_NO_WARNINGS
 #include "metrix.h"
 #include "stb_image.h"
+
 void InitTexture();
 void InitBuffer();
 void make_vertexShaders(const char* v_glsl);

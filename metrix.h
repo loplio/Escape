@@ -1,4 +1,9 @@
 #pragma once
+//pre-proccessing
+#define _CRT_SECURE_NO_WARNINGS
+#define S_ARRAY 8000
+#define F_ARRAY 152
+
 // library
 #include <iostream>
 #include <algorithm>
@@ -15,3 +20,4 @@
 #include <gl/glm/glm.hpp>
 #include <gl/glm/ext.hpp>
 #include <gl/glm/gtc/matrix_transform.hpp>
+

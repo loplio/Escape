@@ -1,6 +1,5 @@
 #include "InitGM.h"
-#define F_ARRAY 20
-#define S_ARRAY 240000
+#include "ReadObj.h"
 
 static GLuint shaderID, vertexShader, fragmentShader;
 extern GLuint vao[16], vbo[31], objVao[200], objVbo[200];
@@ -26,21 +25,30 @@ char* filetobuf(const char* file)
 
 void InitTexture()
 {
-	extern GLuint texture;
+	extern Mtl* InfoMTL;
+	extern GLuint texture[30];
+	extern int image_Num, mtl_Num;
 	int widthImage, heightImage, numberOfChannel;
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	stbi_set_flip_vertically_on_load(true);
-	unsigned char* data = stbi_load("Obj/Isometric/texture/7.jpg", &widthImage, &heightImage, &numberOfChannel, 0);
-	glTexImage2D(GL_TEXTURE_2D, 0, 3, widthImage, heightImage, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-	stbi_image_free(data);
-
+	unsigned char* data = NULL;
+	glGenTextures(30, texture);
+	for (int i = 0; i < image_Num; i++) {
+		glBindTexture(GL_TEXTURE_2D, texture[i]);
+		for (int j = 0; j < mtl_Num; j++)
+			if (InfoMTL[j].Index == i) {
+				data = stbi_load(InfoMTL[j].map_Kd, &widthImage, &heightImage, &numberOfChannel, 0);
+				//printf("%d번 InfoMTL:%s\n", i, InfoMTL[j].map_Kd);
+			}
+		glTexImage2D(GL_TEXTURE_2D, 0, 3, widthImage, heightImage, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		stbi_image_free(data);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	}
 	glActiveTexture(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
+
 }
 void InitBuffer()		// 버퍼 생성하고 데이터 받아오기
 {
