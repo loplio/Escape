@@ -10,8 +10,8 @@ glm::vec3 cameraUp(0.0f, 1.0f, 0.0f);
 glm::mat4 view(1.0f);
 extern GLuint s_program;
 extern int width, height, Tri_Num;
-GLuint texture[30];
-GLuint vao[16], vbo[31], objVao[200], objVbo[200];
+GLuint texture[IMAGE_N];
+GLuint vao[16], vbo[31], objVao[VAO_N], objVbo[VAO_N];
 GLfloat Box_pos[72][3] = {
 	1.0, 1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, 1.0, -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0, 1.0, 1.0,
 	-1.0, 1.0, -1.0, 1.0, 1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, 1.0, -1.0,

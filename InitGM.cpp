@@ -2,7 +2,7 @@
 #include "ReadObj.h"
 
 static GLuint shaderID, vertexShader, fragmentShader;
-extern GLuint vao[16], vbo[31], objVao[200], objVbo[200];
+extern GLuint vao[16], vbo[31], objVao[VAO_N], objVbo[VAO_N];
 extern GLfloat Box_pos[72][3], TriObj[F_ARRAY][S_ARRAY][24], floor_pos[12][3], line[6][3];
 int Tri_Num;
 char* filetobuf(const char* file)
@@ -26,14 +26,21 @@ char* filetobuf(const char* file)
 void InitTexture()
 {
 	extern Mtl* InfoMTL;
-	extern GLuint texture[30];
+	extern GLuint texture[IMAGE_N];
 	extern int image_Num, mtl_Num;
 	int widthImage, heightImage, numberOfChannel;
 	stbi_set_flip_vertically_on_load(true);
 	unsigned char* data = NULL;
-	glGenTextures(30, texture);
-	for (int i = 0; i < image_Num; i++) {
+	glGenTextures(IMAGE_N, texture);
+	if (image_Num + 1 > IMAGE_N) {
+		printf("texture index leak.");
+		exit(0);
+	}
+	for (int i = 0; i <= image_Num; i++) {
 		glBindTexture(GL_TEXTURE_2D, texture[i]);
+		if(image_Num == i){
+			data = stbi_load("Obj/Isometric/7.jpg", &widthImage, &heightImage, &numberOfChannel, 0);
+		}
 		for (int j = 0; j < mtl_Num; j++)
 			if (InfoMTL[j].Index == i) {
 				data = stbi_load(InfoMTL[j].map_Kd, &widthImage, &heightImage, &numberOfChannel, 0);
@@ -76,8 +83,8 @@ void InitBuffer()		// 버퍼 생성하고 데이터 받아오기
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);	// 좌표값을 attribute 인덱스 0번에 명시
 	glEnableVertexAttribArray(0);	// attribute 인덱스 0번을 사용가능하게 함
 
-	glGenVertexArrays(200, objVao);
-	glGenBuffers(200, objVbo);
+	glGenVertexArrays(VAO_N, objVao);
+	glGenBuffers(VAO_N, objVbo);
 
 	for (int i = 0; i < Tri_Num; i++) {
 		glBindVertexArray(objVao[i]);
