@@ -1,1 +1,3 @@
 D:\work\Escape\Debug\Escape.exe
+C:\work\Escape\Debug\Escape.exe
+C:\work\Escape\Debug\Escape.pdb

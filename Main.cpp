@@ -25,7 +25,7 @@ void main(int argc, char** argv)
 {
 	Window_Initializer(argc, argv);
 	// 세이더 읽어와서 세이더 프로그램 만들기
-	MakeFile("Obj/vally/vally.obj", "Obj/vally/vally.mtl");
+	MakeFile("Obj/vally/vally.obj", "Obj/vally/vally2.mtl");
 	s_program = make_shaderProgram("vertex.glsl", "fragment.glsl");
 
 	InitBuffer();
