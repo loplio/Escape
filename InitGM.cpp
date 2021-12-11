@@ -26,18 +26,25 @@ char* filetobuf(const char* file)
 void InitTexture()
 {
 	extern Mtl* InfoMTL;
-	extern GLuint texture[30];
+	extern GLuint texture[IMAGE_N];
 	extern int image_Num, mtl_Num;
 	int widthImage, heightImage, numberOfChannel;
 	stbi_set_flip_vertically_on_load(true);
 	unsigned char* data = NULL;
-	glGenTextures(30, texture);
-	for (int i = 0; i < image_Num; i++) {
+	glGenTextures(IMAGE_N, texture);
+	if (image_Num + 1 > IMAGE_N) {
+		printf("texture index leak.");
+		exit(0);
+	}
+	for (int i = 0; i <= image_Num; i++) {
 		glBindTexture(GL_TEXTURE_2D, texture[i]);
+		if(image_Num == i){
+			data = stbi_load("Obj/Isometric/7.jpg", &widthImage, &heightImage, &numberOfChannel, 0);
+		}
 		for (int j = 0; j < mtl_Num; j++)
 			if (InfoMTL[j].Index == i) {
 				data = stbi_load(InfoMTL[j].map_Kd, &widthImage, &heightImage, &numberOfChannel, 0);
-				//printf("%d¹ø InfoMTL:%s\n", i, InfoMTL[j].map_Kd);
+				//printf("%dï¿½ï¿½ InfoMTL:%s\n", i, InfoMTL[j].map_Kd);
 			}
 		glTexImage2D(GL_TEXTURE_2D, 0, 3, widthImage, heightImage, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 		stbi_image_free(data);
@@ -50,10 +57,10 @@ void InitTexture()
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 }
-void InitBuffer()		// ¹öÆÛ »ý¼ºÇÏ°í µ¥ÀÌÅÍ ¹Þ¾Æ¿À±â
+void InitBuffer()		// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½
 {
 	glGenVertexArrays(16, vao);
-	glGenBuffers(31, vbo);	// 2°³ VBO ÁöÁ¤ ÈÄ ÇÒ´ç
+	glGenBuffers(31, vbo);	// 2ï¿½ï¿½ VBO ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ò´ï¿½
 	glBindVertexArray(vao[0]);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(Box_pos), Box_pos, GL_STATIC_DRAW);
@@ -65,11 +72,11 @@ void InitBuffer()		// ¹öÆÛ »ý¼ºÇÏ°í µ¥ÀÌÅÍ ¹Þ¾Æ¿À±â
 	glBindVertexArray(vao[1]);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(_2dwindow), _2dwindow, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0); //--- À§Ä¡ ¼Ó¼º
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0); //--- ï¿½ï¿½Ä¡ ï¿½Ó¼ï¿½
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float))); //--- ³ë¸»°ª ¼Ó¼º
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float))); //--- ï¿½ë¸»ï¿½ï¿½ ï¿½Ó¼ï¿½
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float))); //--- ÅØ½ºÃ³ ÁÂÇ¥ ¼Ó¼º
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float))); //--- ï¿½Ø½ï¿½Ã³ ï¿½ï¿½Ç¥ ï¿½Ó¼ï¿½
 	glEnableVertexAttribArray(2);
 
 
@@ -82,13 +89,13 @@ void InitBuffer()		// ¹öÆÛ »ý¼ºÇÏ°í µ¥ÀÌÅÍ ¹Þ¾Æ¿À±â
 	//glEnableVertexAttribArray(1);
 
 	glBindVertexArray(vao[13]);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[26]);	// ¹öÅØ½º ¼Ó¼º(ÁÂÇ¥°ª) ÀúÀå
-	glBufferData(GL_ARRAY_BUFFER, 6 * 3 * sizeof(GLfloat), line, GL_STATIC_DRAW);	//¹öÅØ½º µ¥ÀÌÅÍ °ªÀ» ¹öÆÛ¿¡ ÀúÀå
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);	// ÁÂÇ¥°ªÀ» attribute ÀÎµ¦½º 0¹ø¿¡ ¸í½Ã
-	glEnableVertexAttribArray(0);	// attribute ÀÎµ¦½º 0¹øÀ» »ç¿ë°¡´ÉÇÏ°Ô ÇÔ
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[26]);	// ï¿½ï¿½ï¿½Ø½ï¿½ ï¿½Ó¼ï¿½(ï¿½ï¿½Ç¥ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½
+	glBufferData(GL_ARRAY_BUFFER, 6 * 3 * sizeof(GLfloat), line, GL_STATIC_DRAW);	//ï¿½ï¿½ï¿½Ø½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Û¿ï¿½ ï¿½ï¿½ï¿½ï¿½
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);	// ï¿½ï¿½Ç¥ï¿½ï¿½ï¿½ï¿½ attribute ï¿½Îµï¿½ï¿½ï¿½ 0ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	glEnableVertexAttribArray(0);	// attribute ï¿½Îµï¿½ï¿½ï¿½ 0ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ë°¡ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½
 
-	glGenVertexArrays(200, objVao);
-	glGenBuffers(200, objVbo);
+	glGenVertexArrays(VAO_N, objVao);
+	glGenBuffers(VAO_N, objVbo);
 
 	for (int i = 0; i < Tri_Num; i++) {
 		glBindVertexArray(objVao[i]);
@@ -116,7 +123,7 @@ void make_vertexShaders(const char* v_glsl)
 	if (!result)
 	{
 		glGetShaderInfoLog(vertexShader, 512, NULL, errorLog);
-		std::cerr << "ERROR: vertex shader ÄÄÆÄÀÏ ½ÇÆÐ\n" << errorLog << std::endl;
+		std::cerr << "ERROR: vertex shader ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½\n" << errorLog << std::endl;
 		return;
 	}
 }
@@ -134,7 +141,7 @@ void make_fragmentShaders(const char* f_glsl)
 	if (!result)
 	{
 		glGetShaderInfoLog(vertexShader, 512, NULL, errorLog);
-		std::cerr << "ERROR: fragment shader ÄÄÆÄÀÏ ½ÇÆÐ\n" << errorLog << std::endl;
+		std::cerr << "ERROR: fragment shader ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½\n" << errorLog << std::endl;
 		return;
 	}
 }
@@ -158,7 +165,7 @@ GLuint make_shaderProgram(const char* v_glsl, const char* f_glsl)
 	if (!result)
 	{
 		glGetProgramInfoLog(ShaderProgramID, 512, NULL, errorLog);
-		std::cerr << "ERROR: shader program ¿¬°á ½ÇÆÐ\n" << errorLog << std::endl;
+		std::cerr << "ERROR: shader program ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½\n" << errorLog << std::endl;
 		return false;
 	}
 

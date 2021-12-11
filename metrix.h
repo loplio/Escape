@@ -3,6 +3,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #define S_ARRAY 8000
 #define F_ARRAY 152
+#define VAO_N 200
 
 // library
 #include <iostream>

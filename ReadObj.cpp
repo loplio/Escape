@@ -84,10 +84,14 @@ object* ReadObj(FILE* objFile, object* obj, int* TriNum)
 				pfaceIndex = faceIndex;
 				if (poly_face_n > g_polygon_MAX)
 					g_polygon_MAX = poly_face_n;
-				if (poly_face_n > S_ARRAY)
+				if (poly_face_n > S_ARRAY) {
 					printf("/		TriObj Second Array overflow Error.(%d)		/\n", poly_face_n);
-				if (t_n > F_ARRAY)
+					exit(0);
+				}
+				if (t_n > F_ARRAY) {
 					printf("/		TriObj First Array overflow Error.(%d)		/\n", t_n);
+					exit(0);
+				}
 				for (int i = 0, j = faceIndex - poly_face_n; i < poly_face_n; i++, j++) {
 					TriObj[t_n][i][0] = vertex[v[j].x].x, TriObj[t_n][i][1] = vertex[v[j].x].y, TriObj[t_n][i][2] = vertex[v[j].x].z;
 					TriObj[t_n][i][3] = normal[n[j].x].x, TriObj[t_n][i][4] = normal[n[j].x].y, TriObj[t_n][i][5] = normal[n[j].x].z;
