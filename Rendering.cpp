@@ -26,11 +26,13 @@ GLfloat Box_pos[72][3] = {
 	0.0,1.0,0.0, 0.0,1.0,0.0, 0.0,1.0,0.0, 0.0,1.0,0.0, 0.0,1.0,0.0, 0.0,1.0,0.0,
 	0.0,-1.0,0.0, 0.0,-1.0,0.0, 0.0,-1.0,0.0, 0.0,-1.0,0.0, 0.0,-1.0,0.0, 0.0,-1.0,0.0
 };
-GLfloat _2dwindow[] = {
- 1.0f, 1.0f, 0.0f, // 우측 상단
- 1.0f, -1.0f, 0.0f, // 우측 하단
--1.0f, -1.0f, 0.0f, // 좌측 하단
--1.0f, 1.0f, 0.0f // 좌측 상단
+GLfloat _2dwindow[48] = {
+ -1.0f, -1.0f, 0.0f, 0.0, 0.0, 1.0, 0.0, 0.0,
+1.0f, -1.0f, 0.0f, 0.0, 0.0, 1.0, 1.0, 0.0,
+1.0f, 1.0f, 0.0f, 0.0, 0.0, 1.0, 1.0, 1.0,
+1.0f, 1.0f, 0.0f, 0.0, 0.0, 1.0, 1.0, 1.0,
+-1.0f, 1.0f, 0.0f, 0.0, 0.0, 1.0, 0.0, 1.0,
+-1.0f, -1.0f, 0.0f, 0.0, 0.0, 1.0, 0.0, 0.0
 };
 GLfloat TriObj[F_ARRAY][S_ARRAY][24];
 GLfloat floor_pos[12][3] = { 150.0, 0.0, 150.0, 0.0,1.0,0.0, -150.0, 0.0, 150.0, 0.0,1.0,0.0, -150.0, 0.0, -150.0, 0.0,1.0,0.0, 150.0, 0.0, -150.0, 0.0,1.0,0.0 };
@@ -44,11 +46,18 @@ float axis_x, axis_y, light_axis_y, cameraRt_axis_y, cameraRt_axis_x;
 float Mouse_x, Mouse_y, buffer_rad1, buffer_rad2, rad_p1, rad_p2, DirCameraX, DirCameraZ;
 int special_key, KeyDownRL, KeyDownFB, keyRad;
 int image_Num, mtl_Num;
+
+int Scene;
 enum keyDown {
 	F = 0, RF = 45,
 	R = 90, RB = 135,
 	B = 180, LB = 225,
 	L = 270, LF = 315
+};
+enum scene {
+	eIntro = 0,
+	eGame,
+	eEnd
 };
 GLvoid TransformFun()
 {
@@ -93,43 +102,57 @@ GLvoid drawScene() //--- 콜백 함수: 그리기 콜백 함수
 	Rx = glm::rotate(Rx, glm::radians(axis_x), glm::vec3(1.0f, 0.0f, 0.0f)); Ry = glm::rotate(Ry, glm::radians(axis_y), glm::vec3(0.0f, 1.0f, 0.0f)); Ry_l = glm::rotate(Ry_l, glm::radians(light_axis_y), glm::vec3(0.0f, 1.0f, 0.0f));
 	T = glm::translate(T, glm::vec3(shape_focus[1][0], shape_focus[1][1], shape_focus[1][2])); S = glm::scale(S, glm::vec3(1.0f, 1.0f, 1.0f)); Init = glm::translate(Init, glm::vec3(0.0f, 0.0f, 0.0f));
 	TransformFun();
-	//배경
-	L = glm::scale(L, glm::vec3(4.0f, 4.0f, 4.0f));
-	glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(L));
-	glBindVertexArray(vao[13]);
-	glDrawArrays(GL_LINES, 0, 2);
-	glDrawArrays(GL_LINES, 2, 2);
-	glDrawArrays(GL_LINES, 4, 2);
-	glBindVertexArray(vao[6]);
+	if (Scene == eIntro) {
+		L = glm::scale(L, glm::vec3(1.0f, 1.0f, 1.0f));
+		glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(L));
+		glBindVertexArray(vao[1]);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
 
-	////객체
-	////R = glm::scale(R, glm::vec3(0.05f, 0.05f, 0.05f));
-	//R = glm::scale(S, glm::vec3(0.1f, 0.1f, 0.1f));
-	R = glm::scale(R, glm::vec3(40.0f, 40.0f, 40.0f));
-	R = glm::translate(R, glm::vec3(40.0f, 0.0, -40.0));
-	glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(R));
-	glActiveTexture(GL_TEXTURE0);
-	for (int n = 0; n < Tri_Num; n++) {
-		glBindVertexArray(objVao[n]);
-		glBindTexture(GL_TEXTURE_2D, texture[sphere[n].info.Index]);
-		for (int i = 0; i < sphere[n].face_num; i++) {				//기본 박스
+	}
+	else if (Scene == eGame) {
+		//배경
+		L = glm::scale(L, glm::vec3(4.0f, 4.0f, 4.0f));
+		glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(L));
+		glBindVertexArray(vao[13]);
+		glDrawArrays(GL_LINES, 0, 2);
+		glDrawArrays(GL_LINES, 2, 2);
+		glDrawArrays(GL_LINES, 4, 2);
+		glBindVertexArray(vao[6]);
+
+		////객체
+		////R = glm::scale(R, glm::vec3(0.05f, 0.05f, 0.05f));
+		//R = glm::scale(S, glm::vec3(0.1f, 0.1f, 0.1f));
+		R = glm::scale(R, glm::vec3(40.0f, 40.0f, 40.0f));
+		R = glm::translate(R, glm::vec3(40.0f, 0.0, -40.0));
+		glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(R));
+		glActiveTexture(GL_TEXTURE0);
+		for (int n = 0; n < Tri_Num; n++) {
+			glBindVertexArray(objVao[n]);
+			glBindTexture(GL_TEXTURE_2D, texture[sphere[n].info.Index]);
+			for (int i = 0; i < sphere[n].face_num; i++) {				//기본 박스
+				glDrawArrays(GL_TRIANGLES, i * 3, 3);
+			}
+			glBindTexture(GL_TEXTURE_2D, 0);
+		}
+
+		//조명
+		R = Ry_l;
+		glUniformMatrix4fv(LightTransformLocation, 1, GL_FALSE, glm::value_ptr(R));
+		R = Ry_l * T;
+		glUniform3f(lightPosLocation, -5.0, 5.0, 0.0);
+		glUniform3f(lightColorLocation, 1.0, 1.0, 1.0);
+		glUniform3f(objColorLocation, 0.0, 0.5, 1.0);
+		glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(R));
+		glBindVertexArray(vao[0]);
+		for (int i = 0; i < 12; i++) {
 			glDrawArrays(GL_TRIANGLES, i * 3, 3);
 		}
-		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	//조명
-	R = Ry_l;
-	glUniformMatrix4fv(LightTransformLocation, 1, GL_FALSE, glm::value_ptr(R));
-	R = Ry_l * T;
-	glUniform3f(lightPosLocation, -5.0, 5.0, 0.0);
-	glUniform3f(lightColorLocation, 1.0, 1.0, 1.0);
-	glUniform3f(objColorLocation, 0.0, 0.5, 1.0);
-	glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(R));
-	glBindVertexArray(vao[0]);
-	for (int i = 0; i < 12; i++) {
-		glDrawArrays(GL_TRIANGLES, i * 3, 3);
+	else if (Scene == eEnd) {
+
 	}
+	
 
 	glutSwapBuffers(); // 화면에 출력하기
 }

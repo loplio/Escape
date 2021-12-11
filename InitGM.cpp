@@ -3,7 +3,7 @@
 
 static GLuint shaderID, vertexShader, fragmentShader;
 extern GLuint vao[16], vbo[31], objVao[200], objVbo[200];
-extern GLfloat Box_pos[72][3], TriObj[F_ARRAY][S_ARRAY][24], floor_pos[12][3], line[6][3];
+extern GLfloat Box_pos[72][3], TriObj[F_ARRAY][S_ARRAY][24], floor_pos[12][3], line[6][3],_2dwindow[48];
 int Tri_Num;
 char* filetobuf(const char* file)
 {
@@ -61,6 +61,17 @@ void InitBuffer()		// 버퍼 생성하고 데이터 받아오기
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)(sizeof(Box_pos) / 2));
 	glEnableVertexAttribArray(1);
+
+	glBindVertexArray(vao[1]);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(_2dwindow), _2dwindow, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0); //--- 위치 속성
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float))); //--- 노말값 속성
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float))); //--- 텍스처 좌표 속성
+	glEnableVertexAttribArray(2);
+
 
 	//glBindVertexArray(vao[6]);
 	//glBindBuffer(GL_ARRAY_BUFFER, vbo[7]);
