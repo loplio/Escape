@@ -1,9 +1,9 @@
 #pragma once
 //pre-proccessing
 #define _CRT_SECURE_NO_WARNINGS
-#define S_ARRAY 3800
-#define F_ARRAY 2750
-#define VAO_N 2750
+#define S_ARRAY 2205
+#define F_ARRAY 2425
+#define VAO_N 2400
 #define IMAGE_N 46
 
 // library

@@ -70,7 +70,7 @@ newmtl Caja_tex
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\Caja_tex.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\Caja_tex.jpg
 
 newmtl Caja_t03
 	Kd 0.3451 0.5020 0.4275
@@ -85,7 +85,7 @@ newmtl Caja_t03
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\Caja_t03.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\Caja_t03.jpg
 
 newmtl Caja_t01
 	Kd 0.9098 0.3843 0.3765
@@ -100,7 +100,7 @@ newmtl Caja_t01
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\Caja_t01.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\Caja_t01.jpg
 
 newmtl Caja_t02
 	Kd 0.3373 0.4941 0.4196
@@ -115,7 +115,7 @@ newmtl Caja_t02
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\Caja_t02.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\Caja_t02.jpg
 
 newmtl Color_A0
 	Kd 0.6275 0.0863 0.0941
@@ -564,7 +564,7 @@ newmtl Formica_
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\Formica_.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\Formica_.jpg
 
 newmtl Formic01
 	Kd 0.1294 0.4353 0.5961
@@ -607,7 +607,7 @@ newmtl Groundco
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\Groundco.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\Groundco.jpg
 
 newmtl Metal_St
 	Kd 0.6863 0.6863 0.6863
@@ -636,7 +636,7 @@ newmtl PISO_MED
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\PISO_MED.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\PISO_MED.jpg
 
 newmtl PISO_M01
 	Kd 0.3608 0.3804 0.4863
@@ -651,7 +651,7 @@ newmtl PISO_M01
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\PISO_M01.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\PISO_M01.jpg
 
 newmtl PISO_M02
 	Kd 0.4471 0.5373 0.5451
@@ -666,7 +666,7 @@ newmtl PISO_M02
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\PISO_M02.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\PISO_M02.jpg
 
 newmtl Quartz_L
 	Kd 0.9843 0.9843 0.9882
@@ -695,7 +695,7 @@ newmtl TEXTURA_
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\TEXTURA_.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\TEXTURA_.jpg
 
 newmtl TEXTUR01
 	Kd 0.1451 0.2000 0.2196
@@ -710,7 +710,7 @@ newmtl TEXTUR01
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\TEXTUR01.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\TEXTUR01.jpg
 
 newmtl TEXT_NAV
 	Kd 0.2549 0.3255 0.3843
@@ -767,7 +767,7 @@ newmtl Water_Da
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\Water_Da.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\Water_Da.jpg
 
 newmtl _Color_B
 	Kd 0.7098 0.4941 0.1961
@@ -908,7 +908,7 @@ newmtl medicina
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\medicina.png
+	map_Kd D:\work\Escape\Obj\among_us\source\medicina.png
 
 newmtl monitor_
 	Kd 0.3333 0.6157 0.4510
@@ -923,7 +923,7 @@ newmtl monitor_
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\monitor_.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\monitor_.jpg
 
 newmtl monito01
 	Kd 0.3059 0.5765 0.4235
@@ -938,7 +938,7 @@ newmtl monito01
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\monito01.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\monito01.jpg
 
 newmtl monito02
 	Kd 0.2745 0.4980 0.3686
@@ -953,7 +953,7 @@ newmtl monito02
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\monito02.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\monito02.jpg
 
 newmtl motores_
 	Kd 0.4000 0.3843 0.3608
@@ -968,7 +968,7 @@ newmtl motores_
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\motores_.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\motores_.jpg
 
 newmtl pared_ad
 	Kd 0.3725 0.4392 0.4745
@@ -983,7 +983,7 @@ newmtl pared_ad
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\pared_ad.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\pared_ad.jpg
 
 newmtl pared_al
 	Kd 0.4078 0.4275 0.4353
@@ -998,7 +998,7 @@ newmtl pared_al
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\pared_al.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\pared_al.jpg
 
 newmtl pared_ca
 	Kd 0.3647 0.3490 0.3961
@@ -1013,7 +1013,7 @@ newmtl pared_ca
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\pared_ca.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\pared_ca.jpg
 
 newmtl pared_es
 	Kd 0.4235 0.4196 0.3490
@@ -1028,7 +1028,7 @@ newmtl pared_es
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\pared_es.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\pared_es.jpg
 
 newmtl paredes_
 	Kd 0.2196 0.3686 0.4078
@@ -1043,7 +1043,7 @@ newmtl paredes_
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\paredes_.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\paredes_.jpg
 
 newmtl piso_alm
 	Kd 0.3569 0.3961 0.3843
@@ -1058,7 +1058,7 @@ newmtl piso_alm
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\piso_alm.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\piso_alm.jpg
 
 newmtl piso_caf
 	Kd 0.6471 0.6549 0.5961
@@ -1073,7 +1073,7 @@ newmtl piso_caf
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\piso_caf.png
+	map_Kd D:\work\Escape\Obj\among_us\source\piso_caf.png
 
 newmtl piso_cam
 	Kd 0.1922 0.3922 0.3412
@@ -1088,7 +1088,7 @@ newmtl piso_cam
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\piso_cam.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\piso_cam.jpg
 
 newmtl piso_com
 	Kd 0.3098 0.4235 0.4510
@@ -1103,7 +1103,7 @@ newmtl piso_com
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\piso_com.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\piso_com.jpg
 
 newmtl piso_ele
 	Kd 0.4000 0.4078 0.3647
@@ -1118,7 +1118,7 @@ newmtl piso_ele
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\piso_ele.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\piso_ele.jpg
 
 newmtl piso_pas
 	Kd 0.4118 0.5176 0.5412
@@ -1133,7 +1133,7 @@ newmtl piso_pas
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\piso_pas.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\piso_pas.jpg
 
 newmtl piso_p01
 	Kd 0.4118 0.5176 0.5412
@@ -1148,7 +1148,7 @@ newmtl piso_p01
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\piso_p01.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\piso_p01.jpg
 
 newmtl piso_tex
 	Kd 0.4353 0.5490 0.5765
@@ -1163,7 +1163,7 @@ newmtl piso_tex
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\piso_tex.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\piso_tex.jpg
 
 newmtl piso_t04
 	Kd 0.4353 0.5490 0.5765
@@ -1178,7 +1178,7 @@ newmtl piso_t04
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\piso_t04.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\piso_t04.jpg
 
 newmtl piso_t03
 	Kd 0.2549 0.3412 0.3529
@@ -1193,7 +1193,7 @@ newmtl piso_t03
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\piso_t03.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\piso_t03.jpg
 
 newmtl piso_t01
 	Kd 0.4588 0.5725 0.6039
@@ -1208,7 +1208,7 @@ newmtl piso_t01
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\piso_t01.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\piso_t01.jpg
 
 newmtl piso_t02
 	Kd 0.4824 0.6039 0.6353
@@ -1223,7 +1223,7 @@ newmtl piso_t02
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\piso_t02.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\piso_t02.jpg
 
 newmtl reactor_
 	Kd 0.3373 0.3294 0.3020
@@ -1238,7 +1238,7 @@ newmtl reactor_
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\reactor_.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\reactor_.jpg
 
 newmtl reacto01
 	Kd 0.3294 0.3255 0.3059
@@ -1253,7 +1253,7 @@ newmtl reacto01
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\reacto01.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\reacto01.jpg
 
 newmtl separado
 	Kd 0.1451 0.2196 0.2314
@@ -1268,7 +1268,7 @@ newmtl separado
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\separado.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\separado.jpg
 
 newmtl test_med
 	Kd 0.2314 0.5686 0.3608
@@ -1297,7 +1297,7 @@ newmtl text_c01
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\text_c01.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\text_c01.jpg
 
 newmtl text_com
 	Kd 0.4784 0.5686 0.5216
@@ -1312,7 +1312,7 @@ newmtl text_com
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\text_com.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\text_com.jpg
 
 newmtl textu_pi
 	Kd 0.2941 0.2941 0.2941
@@ -1355,18 +1355,19 @@ newmtl textura_
 	Ni 1.5000
 	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd C:\work\Escape\Obj\among_us\source\TEXTURA_.jpg
+	map_Kd D:\work\Escape\Obj\among_us\source\TEXTURA_.jpg
 
-newmtl Physical
-	Kd 0.7333 0.8000 0.5922
-	Ks 0.9000 0.9000 0.9000
+newmtl Material__40
+	Kd 0.5000 0.5000 0.5000
+	Ks 1.0000 1.0000 1.0000
 	Tr 0.0000
 	d 1.0000
-	Tf 0.0000 0.0000 0.0000
-	Pr 0.0392
+	Tf 1.0000 1.0000 1.0000
+	Pr 0.0000
 	Pm 0.0000
 	Pc 0.0000
 	Pcr 0.0000
-	Ni 1.5000
+	Ni 1.5200
+	Ke 0.0000 0.0000 0.0000
 	illum 2
-	map_Kd D:\work\Escape\Obj\vally\image\1024x512.png
+	map_Kd D:\work\Escape\Obj\among_us\source\Sus.png

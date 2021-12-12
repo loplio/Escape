@@ -2,15 +2,16 @@
 #include "ReadObj.h"
 #define SPEED 5
 #define SPACEBAR 32
-#define CAMERA_X 1100
+#define CAMERA_X 1106
 #define CAMERA_Y -5
-#define CAMERA_Z -665
+#define CAMERA_Z -855
 glm::vec3 cameraPos(CAMERA_X, CAMERA_Y, CAMERA_Z);
 glm::vec3 cameraDirection(CAMERA_X, CAMERA_Y, CAMERA_Z - 1);
 //glm::vec3 cameraPos(0.0f, 0.0f, 0.0f);
 //glm::vec3 cameraDirection(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp(0.0f, 1.0f, 0.0f);
 glm::mat4 view(1.0f);
+glm::vec3 amongPos(CAMERA_X, 0, CAMERA_Z - 240);
 extern GLuint s_program;
 extern int width, height, Tri_Num;
 GLuint texture[IMAGE_N];
@@ -36,6 +37,7 @@ GLfloat _2dwindow[] = {
 -1.0f, 1.0f, 0.0f // 좌측 상단
 };
 GLfloat TriObj[F_ARRAY][S_ARRAY][24];
+GLfloat amongus[34][24];
 GLfloat floor_pos[12][3] = { 150.0, 0.0, 150.0, 0.0,1.0,0.0, -150.0, 0.0, 150.0, 0.0,1.0,0.0, -150.0, 0.0, -150.0, 0.0,1.0,0.0, 150.0, 0.0, -150.0, 0.0,1.0,0.0 };
 GLfloat line[6][3] = { 0.0,-400.0,0.0, 0.0,400.0,0.0, -400.0,0.0,0.0, 400.0,0.0,0.0, 0.0,0.0,-400.0, 0.0,0.0,400.0 };
 GLfloat shape_focus[16][3] = { 0.0,0.0,0.0, 12.0,5.0,0.0, 0.0,0.1,0.0, 0.0,0.35,0.0, -0.15,0.75,0.0, 0.15,0.75,0.0, };
@@ -80,7 +82,7 @@ GLvoid TransformFun()
 }
 GLvoid drawScene() //--- 콜백 함수: 그리기 콜백 함수 
 {
-	GLfloat rColor = 1.0, gColor = 1.0, bColor = 1.0;
+	GLfloat rColor = 0.8, gColor = 0.8, bColor = 0.8;
 	glClearColor(rColor, gColor, bColor, 1.0f); // 바탕색을 ‘blue’ 로 지정
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glUseProgram(s_program);
@@ -91,6 +93,7 @@ GLvoid drawScene() //--- 콜백 함수: 그리기 콜백 함수
 	int objColorLocation = glGetUniformLocation(s_program, "objectColor");
 	glUniform3f(lightPosLocation, 0.0, 4000.0, 0.0);
 	glUniform3f(objColorLocation, 1.0, 1.0, 1.0);
+	glUniform3f(lightColorLocation, 1.0, 1.0, 1.0);
 	glm::mat4 Rx(1.0f); glm::mat4 Ry(1.0f); glm::mat4 Ry_l(1.0f);
 	glm::mat4 T(1.0f); glm::mat4 S(1.0f); glm::mat4 R(1.0f); glm::mat4 L(1.0f); glm::mat4 Init(1.0f);
 	Rx = glm::rotate(Rx, glm::radians(axis_x), glm::vec3(1.0f, 0.0f, 0.0f)); Ry = glm::rotate(Ry, glm::radians(axis_y), glm::vec3(0.0f, 1.0f, 0.0f)); Ry_l = glm::rotate(Ry_l, glm::radians(light_axis_y), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -99,18 +102,24 @@ GLvoid drawScene() //--- 콜백 함수: 그리기 콜백 함수
 	//배경
 	L = glm::scale(L, glm::vec3(4.0f, 4.0f, 4.0f));
 	glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(L));
+	glUniformMatrix4fv(LightTransformLocation, 1, GL_FALSE, glm::value_ptr(R));
 	glBindVertexArray(vao[13]);
 	glDrawArrays(GL_LINES, 0, 2);
 	glDrawArrays(GL_LINES, 2, 2);
 	glDrawArrays(GL_LINES, 4, 2);
 	glBindVertexArray(vao[6]);
 
-	////객체
-	////R = glm::scale(R, glm::vec3(0.05f, 0.05f, 0.05f));
-	//R = glm::scale(S, glm::vec3(0.1f, 0.1f, 0.1f));
-	R = glm::scale(R, glm::vec3(1.0f, 1.0f, 1.0f));
-	glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(R));
+	//객체
 	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture[image_Num+1]);
+	R = glm::translate(R, glm::vec3(amongPos.x, amongPos.y, amongPos.z));
+	R = glm::rotate(R, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));			// Among_us
+	glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(R));
+	glBindVertexArray(vao[1]);
+	glDrawArrays(GL_TRIANGLES, 0, 102);
+	//R = glm::scale(R, glm::vec3(1.0f, 1.0f, 1.0f));
+	R = Init;
+	glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(R));
 	for (int n = 0; n < Tri_Num; n++) {
 		glBindVertexArray(objVao[n]);
 		if(sphere[n].info.Index == -1)						// 텍스처 매칭
@@ -118,25 +127,9 @@ GLvoid drawScene() //--- 콜백 함수: 그리기 콜백 함수
 		else
 			glBindTexture(GL_TEXTURE_2D, texture[sphere[n].info.Index]);
 		glUniform3f(objColorLocation, sphere[n].info.Kd.x, sphere[n].info.Kd.y, sphere[n].info.Kd.z);				// 기본 색상 매칭
-		for (int i = 0; i < sphere[n].face_num; i++) {				//기본 박스
-			glDrawArrays(GL_TRIANGLES, i * 3, 3);
-		}
+		glDrawArrays(GL_TRIANGLES, 0, sphere[n].face_num * 3);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
-
-	//조명
-	R = Ry_l;
-	glUniformMatrix4fv(LightTransformLocation, 1, GL_FALSE, glm::value_ptr(R));
-	R = Ry_l * T;
-	glUniform3f(lightPosLocation, -5.0, 5.0, 0.0);
-	glUniform3f(lightColorLocation, 1.0, 1.0, 1.0);
-	glUniform3f(objColorLocation, 0.0, 0.5, 1.0);
-	glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(R));
-	glBindVertexArray(vao[0]);
-	for (int i = 0; i < 12; i++) {
-		glDrawArrays(GL_TRIANGLES, i * 3, 3);
-	}
-
 	glutSwapBuffers(); // 화면에 출력하기
 }
 BOOL isInside(glm::vec2 B) {
@@ -196,7 +189,7 @@ BOOL isInside(glm::vec2 B) {
 	for (int i = 0; i < cIndex; i++)
 		free(ply[i]);
 	free(ply);
-	printf("crosses:%d\n", crosses);
+	//printf("crosses:%d\n", crosses);
 	return crosses % 2 > 0;
 }
 void Update()
@@ -378,9 +371,10 @@ void special(int key, int x, int y)
 }
 void MakeFile(const char* objfile, const char* mtlfile)
 {
-	FILE* Shape, *MTL;
+	FILE* Shape, *MTL, *Au;
 	Shape = fopen(objfile, "rb");
 	MTL = fopen(mtlfile, "rb");
+	amongusLoad();
 	if (Shape == NULL || MTL == NULL) {
 		printf("File open failed...");
 		exit(1);
@@ -389,7 +383,6 @@ void MakeFile(const char* objfile, const char* mtlfile)
 	InfoMTL = ReadMtl(MTL, sphere, Tri_Num, &image_Num, &mtl_Num);
 	fclose(Shape);
 }
-
 void Mouse(int button, int state, int x, int y)
 {
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {

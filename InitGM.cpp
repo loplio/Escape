@@ -3,7 +3,7 @@
 
 static GLuint shaderID, vertexShader, fragmentShader;
 extern GLuint vao[16], vbo[31], objVao[200], objVbo[200];
-extern GLfloat Box_pos[72][3], TriObj[F_ARRAY][S_ARRAY][24], floor_pos[12][3], line[6][3];
+extern GLfloat Box_pos[72][3], TriObj[F_ARRAY][S_ARRAY][24], amongus[34][24], floor_pos[12][3], line[6][3];
 int Tri_Num;
 char* filetobuf(const char* file)
 {
@@ -29,6 +29,7 @@ void InitTexture()
 	extern GLuint texture[IMAGE_N];
 	extern int image_Num, mtl_Num;
 	int widthImage, heightImage, numberOfChannel;
+	int n = 0;
 	stbi_set_flip_vertically_on_load(true);
 	unsigned char* data = NULL;
 	glGenTextures(IMAGE_N, texture);
@@ -36,24 +37,39 @@ void InitTexture()
 		printf("texture index leak.");
 		exit(0);
 	}
-	for (int i = 0; i <= image_Num; i++) {
-		glBindTexture(GL_TEXTURE_2D, texture[i]);
-		if(image_Num == i){
-			data = stbi_load("Obj/among_us/source/white.jpg", &widthImage, &heightImage, &numberOfChannel, 0);
-		}
-		for (int j = 0; j < mtl_Num; j++) {
-			if (InfoMTL[j].Index == i) {
-				data = stbi_load(InfoMTL[j].map_Kd, &widthImage, &heightImage, &numberOfChannel, 0);
-				//printf("%d�� InfoMTL:%s\n", i, InfoMTL[j].map_Kd);
-			}
-		}
-		glTexImage2D(GL_TEXTURE_2D, 0, 3, widthImage, heightImage, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-		stbi_image_free(data);
+	for (int j = 0; j < mtl_Num; j++) {
+		printf("InfoMTL name:%s\n", InfoMTL[j].name);
+		glBindTexture(GL_TEXTURE_2D, texture[n]);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		if (InfoMTL[j].Index == n) {
+			data = stbi_load(InfoMTL[j].map_Kd, &widthImage, &heightImage, &numberOfChannel, 0);
+			n++;
+			printf("%d�� InfoMTL:%s\n", n, InfoMTL[j].map_Kd);
+		}
+		else
+			continue;
+		glTexImage2D(GL_TEXTURE_2D, 0, 3, widthImage, heightImage, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		stbi_image_free(data);
 	}
+	glBindTexture(GL_TEXTURE_2D, texture[n]);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	data = stbi_load("Obj/among_us/source/white.jpg", &widthImage, &heightImage, &numberOfChannel, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, widthImage, heightImage, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+	stbi_image_free(data);
+	glBindTexture(GL_TEXTURE_2D, texture[n+1]);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	data = stbi_load("Obj/among_us/source/amongus1.jpg", &widthImage, &heightImage, &numberOfChannel, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, widthImage, heightImage, 0, GL_RGB, GL_UNSIGNED_BYTE, data); 
+	stbi_image_free(data);
 	glActiveTexture(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -70,13 +86,15 @@ void InitBuffer()		// ���� �����ϰ� ������ �޾
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)(sizeof(Box_pos) / 2));
 	glEnableVertexAttribArray(1);
 
-	//glBindVertexArray(vao[6]);
-	//glBindBuffer(GL_ARRAY_BUFFER, vbo[7]);
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(floor_pos), floor_pos, GL_STATIC_DRAW);
-	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-	//glEnableVertexAttribArray(0);
-	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-	//glEnableVertexAttribArray(1);
+	glBindVertexArray(vao[1]);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(amongus), amongus, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 
 	glBindVertexArray(vao[13]);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[26]);	// ���ؽ� �Ӽ�(��ǥ��) ����
