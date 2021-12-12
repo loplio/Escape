@@ -3,7 +3,7 @@
 
 static GLuint shaderID, vertexShader, fragmentShader;
 extern GLuint vao[16], vbo[31], objVao[200], objVbo[200];
-extern GLfloat Box_pos[72][3], TriObj[F_ARRAY][S_ARRAY][24], floor_pos[12][3], line[6][3],_2dwindow[48];
+extern GLfloat Box_pos[72][3], TriObj[F_ARRAY][S_ARRAY][24], floor_pos[12][3], line[6][3];
 int Tri_Num;
 char* filetobuf(const char* file)
 {
@@ -39,13 +39,14 @@ void InitTexture()
 	for (int i = 0; i <= image_Num; i++) {
 		glBindTexture(GL_TEXTURE_2D, texture[i]);
 		if(image_Num == i){
-			data = stbi_load("Obj/Isometric/7.jpg", &widthImage, &heightImage, &numberOfChannel, 0);
+			data = stbi_load("Obj/among_us/source/white.jpg", &widthImage, &heightImage, &numberOfChannel, 0);
 		}
-		for (int j = 0; j < mtl_Num; j++)
+		for (int j = 0; j < mtl_Num; j++) {
 			if (InfoMTL[j].Index == i) {
 				data = stbi_load(InfoMTL[j].map_Kd, &widthImage, &heightImage, &numberOfChannel, 0);
 				//printf("%d�� InfoMTL:%s\n", i, InfoMTL[j].map_Kd);
 			}
+		}
 		glTexImage2D(GL_TEXTURE_2D, 0, 3, widthImage, heightImage, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 		stbi_image_free(data);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -68,17 +69,6 @@ void InitBuffer()		// ���� �����ϰ� ������ �޾
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)(sizeof(Box_pos) / 2));
 	glEnableVertexAttribArray(1);
-
-	glBindVertexArray(vao[1]);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(_2dwindow), _2dwindow, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0); //--- ��ġ �Ӽ�
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float))); //--- �븻�� �Ӽ�
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float))); //--- �ؽ�ó ��ǥ �Ӽ�
-	glEnableVertexAttribArray(2);
-
 
 	//glBindVertexArray(vao[6]);
 	//glBindBuffer(GL_ARRAY_BUFFER, vbo[7]);

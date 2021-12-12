@@ -4,6 +4,7 @@ typedef struct MtlFile {
 	int Index;
 	char* name;
 	char* map_Kd;
+	glm::vec3 Kd;
 } Mtl;
 typedef struct ObjFile {
 	int face_num;

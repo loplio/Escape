@@ -29,6 +29,8 @@ Mtl* ReadMtl(FILE* mtlFile, object* obj, int objNum, int* image_Num, int* mtl_Nu
 			m[mtlIndex].name = (char*)malloc(sizeof(char) * strlen(bind));
 			strcpy(m[mtlIndex].name, bind);
 		}
+		else if (!strcmp(bind, "Kd"))
+			fscanf(mtlFile, "%f %f %f", &m[mtlIndex].Kd.x, &m[mtlIndex].Kd.y, &m[mtlIndex].Kd.z);
 		else if (!strcmp(bind, "map_Kd")) {
 			//memset(bind, '\0', sizeof(bind));
 			fscanf(mtlFile, "%s", bind);
@@ -43,11 +45,12 @@ Mtl* ReadMtl(FILE* mtlFile, object* obj, int objNum, int* image_Num, int* mtl_Nu
 	for (int i = 0; i < objNum; i++) {
 		for (int j = 0; j < mtlNum; j++) {
 			if (!strcmp(obj[i].info.name, m[j].name)) {
-				if (m[j].map_Kd != NULL) {
+				if (m[j].map_Kd != NULL) {				// °æ·Î ¸ÅÄª
 					obj[i].info.Index = m[j].Index;
 					obj[i].info.map_Kd = (char*)malloc(sizeof(char) * strlen(m[j].map_Kd));
 					strcpy(obj[i].info.map_Kd, m[j].map_Kd);
 				}
+				obj[i].info.Kd = m[j].Kd;				// ±âº» »ö»ó ¸ÅÄª
 				break;
 			}
 		}

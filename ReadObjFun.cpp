@@ -5,6 +5,7 @@ void New_Info(Mtl *info)
 	info->Index = -1;
 	info->name = NULL;
 	info->map_Kd = NULL;
+	info->Kd.x = 0.0, info->Kd.y = 0.0, info->Kd.z = 0.0;
 }
 void Del_Info(Mtl *info)
 {
