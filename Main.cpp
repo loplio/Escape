@@ -32,8 +32,8 @@ void main(int argc, char** argv)
 {
 	Window_Initializer(argc, argv);
 	// mtl 조성택꺼는 뒤어 _jo붙음
-	//MakeFile("Obj/among_us/among_us.obj", "Obj/among_us/among_us.mtl");
-	MakeFile("Obj/among_us/among_us.obj", "Obj/among_us/among_us_jo.mtl");
+	MakeFile("Obj/among_us/among_us.obj", "Obj/among_us/among_us.mtl");
+	//MakeFile("Obj/among_us/among_us.obj", "Obj/among_us/among_us_jo.mtl");
 	s_program = make_shaderProgram("vertex.glsl", "fragment.glsl");
 	s_program_ui=make_shaderProgram("vertex_OT.glsl", "fragment_OT.glsl");
 	InitBuffer();
@@ -44,7 +44,6 @@ void main(int argc, char** argv)
 	// 출력 콜백 함수
 	glutMouseFunc(Mouse);
 	glutMotionFunc(Motion);
-	//glutPassiveMotionFunc(Motion2);
 	glutPassiveMotionFunc(pMotion);
 	glutKeyboardFunc(Keyboard);	// 키보드 입력
 	glutKeyboardUpFunc(KeyboardUp);

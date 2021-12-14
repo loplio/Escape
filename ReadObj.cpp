@@ -112,7 +112,7 @@ object* ReadObj(FILE* objFile, object* obj, int* TriNum)
 				obj[objIndex].group_name = (char*)malloc(sizeof(char) * strlen(bind));
 				strcpy(obj[objIndex].group_name, bind);
 				New_Info(&obj[objIndex].info);
-				//printf("%s\n", obj[objIndex].group_name);
+				//printf("%s %d\n", obj[objIndex].group_name, objIndex);
 				objIndex++;
 			}
 		}
