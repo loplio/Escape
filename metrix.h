@@ -5,7 +5,7 @@
 #define F_ARRAY 2425
 #define VAO_N 2400
 #define IMAGE_N 46
-
+#define UI_TEXT 6
 // library
 #include <iostream>
 #include <algorithm>

@@ -17,7 +17,7 @@ extern GLuint s_program;
 extern GLuint s_program_ui;
 extern int width, height, Tri_Num;
 GLuint texture[IMAGE_N];
-GLuint texture_ui[3];
+GLuint texture_ui[UI_TEXT];
 GLuint vao[16], vbo[31], objVao[VAO_N], objVbo[VAO_N];
 GLfloat Box_pos[72][3] = {
 	1.0, 1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, 1.0, -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0, 1.0, 1.0,
@@ -43,8 +43,15 @@ GLfloat _2dwindow[48] = {
 };
 bool onclick = false;
 bool isJump = false;
+bool SG = false;
+bool isSabo = false;
+float t = 0;
+int sec = 0;
 int jPower = 2;
 int jH = 0;
+GLfloat rColor = 0.8, gColor = 0.8, bColor = 0.8;
+GLfloat light_R = 1.0, light_G = 1.0, light_B = 1.0;
+GLfloat light_Y = 4000.0;
 GLfloat TriObj[F_ARRAY][S_ARRAY][24];
 GLfloat amongus[34][24];
 GLfloat floor_pos[12][3] = { 150.0, 0.0, 150.0, 0.0,1.0,0.0, -150.0, 0.0, 150.0, 0.0,1.0,0.0, -150.0, 0.0, -150.0, 0.0,1.0,0.0, 150.0, 0.0, -150.0, 0.0,1.0,0.0 };
@@ -70,7 +77,8 @@ int Scene;
 enum Scene {
 	eIntro = 0,
 	eGame,
-	eEnd
+	eEnd,
+	eReplay
 };
 GLvoid TransformFun()
 {
@@ -100,15 +108,14 @@ GLvoid TransformFun()
 }
 GLvoid drawScene() //--- 콜백 함수: 그리기 콜백 함수 
 {
-	GLfloat rColor = 0.1, gColor = 0.1, bColor = 0.1;
 	glClearColor(rColor, gColor, bColor, 1.0f); // 바탕색을 ‘blue’ 로 지정
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	if (Scene == eIntro) {
 		glUseProgram(s_program_ui);
 		glActiveTexture(GL_TEXTURE0);
-		removeBg("Sound/end.mp3");
-		PlayBg("Sound/intro.mp3");
+
+		PlayBg("Sound/intro2.mp3");
 		if (onclick) {
 			glBindTexture(GL_TEXTURE_2D, texture_ui[1]);
 		}
@@ -184,7 +191,23 @@ GLvoid drawScene() //--- 콜백 함수: 그리기 콜백 함수
 		PlayBg("Sound/end.mp3");
 		glUseProgram(s_program_ui);
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture_ui[2]);
+		if (onclick) {
+			glBindTexture(GL_TEXTURE_2D, texture_ui[3]);
+		}
+		else
+			glBindTexture(GL_TEXTURE_2D, texture_ui[2]);
+		glBindVertexArray(vao[2]);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+	}
+	else if (Scene == eReplay) {
+		PlayBg("Sound/lose.mp3");
+		glUseProgram(s_program_ui);
+		glActiveTexture(GL_TEXTURE0);
+		if (onclick) {
+			glBindTexture(GL_TEXTURE_2D, texture_ui[5]);
+		}
+		else
+			glBindTexture(GL_TEXTURE_2D, texture_ui[4]);
 		glBindVertexArray(vao[2]);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 	}
@@ -317,7 +340,10 @@ int Picking(int xCursor, int yCursor)
 }
 void Update()
 {
-	if (Collide()) printf("Dead------------\n");
+	if (Collide()) {
+		PlayBg("Sound/kill.mp3");
+		Scene = eReplay;
+	};
 	if (rotate_object) cameraRt_axis_y += 5;
 	if (rotate_light) light_axis_y += 3 * light_dir_y;
 	if (isInside(glm::vec2(cameraPos.x + DirCameraX, -(cameraPos.z + DirCameraZ+20))))
@@ -326,7 +352,9 @@ void Update()
 		AMrad = atan2(-(cameraPos.z - amongPos.z), cameraPos.x - amongPos.x);
 		amongPos.x += AMSPEED * cos(AMrad), amongPos.z -= AMSPEED * sin(AMrad);
 	}//	printf("cameraPos: %f  %f  %f\n", cameraPos.x, cameraPos.y, cameraPos.z);
-	//Jump();
+	Jump();
+	Sabo();
+	Timer();
 	glutTimerFunc(30, TimerFunction, 1);
 }
 void Jump() {
@@ -347,6 +375,30 @@ void Jump() {
 		}
 	}
 }
+void Timer() {
+	if (SG) {
+		t += 0.03;
+		if (t >= 60) {
+			Scene = eEnd;
+			SG = false;
+			t = 0;
+		}
+	}
+
+}
+void Sabo() {
+	if (isSabo) {
+		if (sec % 6 == 0) {
+			rColor = 1.0, gColor = 0.0, bColor = 0.0;
+			light_R = 1.0, light_G = 0.0, light_B = 0.0;
+		}
+		else {
+			rColor = 0.0, gColor = 0.0, bColor = 0.0;
+			light_R = 0.0, light_G = 0.0, light_B = 0.0;
+		}
+		sec++;
+	}
+}
 void TimerFunction(int value)
 {
 	glutPostRedisplay();
@@ -363,9 +415,48 @@ GLvoid Keyboard(unsigned char key, int x, int y)
 	case'l':
 		Scene = eEnd;
 		break;
+	case'L':
+		Scene = eReplay;
+		break;
+	case'j':
+		isSabo = true;
+		PlayBg_R("Sound/bee.mp3");
+		break;
+	case'k':
+		light_R = 0.2, light_G = 0.2, light_B = 0.2;
+		light_Y = 10.0;
+		break;
+	case'J':
+		isSabo = false;
+		rColor = 0.8, gColor = 0.8, bColor = 0.8;
+		light_R = 1.0, light_G = 1.0, light_B = 1.0;
+		removeBg("Sound/bee.mp3");
+		break;
+	case'K':
+		light_R = 1.0, light_G = 1.0, light_B = 1.0;
+		light_Y = 4000.0;
+		break;
+	case'p':
+		SG = false;
+		t = 0;
+		amongPos.x = CAMERA_X;
+		amongPos.y= 0;
+		amongPos.z = CAMERA_Z-240;
+		break;
+	case'+':
+		t += 5;
+		break;
+	case'-':
+		t -= 5;
+		break;
+	case'0':
+		removeBg("Sound/bee.mp3");
+		removeBg("Sound/intro2.mp3");
+		removeBg("Sound/end.mp3");
+		removeBg("Sound/lose.mp3");
+		break;
 	case SPACEBAR:
 		isJump = true;
-		
 		break;
 	case 't':
 		if (!rotate_light) rotate_light = TRUE;
@@ -547,6 +638,7 @@ void Mouse(int button, int state, int x, int y)
 		if(Picking(x, y) == 1)
 			state_button = TRUE;
 		if (Picking(x, y) == 2) {
+			PlayBg("Sound/vent.mp3");
 			if (Bent_n == 961) cameraPos.x = 1240, cameraPos.z = -386, cameraDirection.x = 1240, cameraDirection.z = -387;
 			else if (Bent_n == 890) cameraPos.x = 1545, cameraPos.z = -571, cameraDirection.x = 1545, cameraDirection.z = -572;
 			else if (Bent_n == 1000) cameraPos.x = 1309, cameraPos.z = -818, cameraDirection.x = 1309, cameraDirection.z = -819;
@@ -562,23 +654,35 @@ void Mouse(int button, int state, int x, int y)
 			else if (Bent_n == 997) cameraPos.x = 665, cameraPos.z = -635, cameraDirection.x = 665, cameraDirection.z = -636;
 			else if (Bent_n == 960) cameraPos.x = 585, cameraPos.z = -539, cameraDirection.x = 585, cameraDirection.z = -540;
 		}
+
+		if (Scene == eIntro || Scene == eEnd || Scene == eReplay) {
+			if (Posx > -0.088 && Posx < 0.078 && Posy > -0.227 && Posy < 0.078) {
+				if (Scene == eIntro) {
+					removeBg("Sound/intro2.mp3");
+					PlayBg("Sound/main.mp3");
+					SG = true;
+					Scene = eGame;
+				}
+				else if (Scene == eEnd) {
+					removeBg("Sound/end.mp3");
+					Scene = eIntro;
+				}
+				else if (Scene == eReplay) {
+					removeBg("Sound/lose.mp3");
+					cameraPos.x = 1106;
+					cameraPos.y = 30;
+					cameraPos.z = -855;
+					PlayBg("Sound/main.mp3");
+					Scene = eGame;
+				}
+			}
+		}
 	}
 	else if (state == GLUT_UP) {
 		buffer_rad1 += rad_p1;
 		buffer_rad2 += rad_p2;
 	}
-	if (Scene == eIntro || Scene == eEnd) {
-		if (Posx > -0.088 && Posx < 0.078 && Posy > -0.227 && Posy < 0.078) {
-			if (Scene == eIntro) {
-				removeBg("Sound/intro.mp3");
-				PlayBg("Sound/main.mp3");
-				Scene = eGame;
-			}
-
-			else
-				Scene = eIntro;
-		}
-	}
+	
 }
 void Motion(int x, int y)
 {
@@ -590,7 +694,7 @@ void Motion(int x, int y)
 	//printf("cameraRt_axis_x:%f\n", cameraRt_axis_x);
 }
 void pMotion(int x, int y) {
-	if (Scene == eIntro) {
+	if (Scene == eIntro||Scene ==eEnd||Scene==eReplay) {
 
 		float Posx = (float)(x - (float)width / 2.0f) * (float)(1.0f / (float)(width / 2.0f));
 		float Posy = -(float)(y - (float)height / 2.0f) * (float)(1.0f / (float)(height / 2.0f));
@@ -668,4 +772,22 @@ void PlayEf(std::string path)
 
 	// 효과음 파일 재생
 	sndPlaySound(r, SND_ASYNC);
+}
+void PlayBg_R(std::string path)
+{
+	std::string str;
+	str += "play ";
+	str += path;
+	str += " repeat";
+
+	// 자료형 변환 해줘야함 ;;;
+	// string to tchar 로..
+	int slength = (int)str.length() + 1;
+	int len = MultiByteToWideChar(CP_ACP, 0, str.c_str(), slength, 0, 0);
+	TCHAR* buf = new TCHAR[len];
+	MultiByteToWideChar(CP_ACP, 0, str.c_str(), slength, buf, len);
+	TCHAR* r(buf);
+
+
+	mciSendString(r, 0, 0, 0);
 }

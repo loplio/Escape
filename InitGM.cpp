@@ -23,11 +23,11 @@ char* filetobuf(const char* file)
 	return buf; // Return the buffer
 }
 void InitTexture_ui() {
-	extern GLuint texture_ui[3];
+	extern GLuint texture_ui[UI_TEXT];
 	int widthImage, heightImage, numberOfChannel;
 	stbi_set_flip_vertically_on_load(true);
 
-	glGenTextures(2, texture_ui);
+	glGenTextures(UI_TEXT, texture_ui);
 	glBindTexture(GL_TEXTURE_2D, texture_ui[0]);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -56,6 +56,36 @@ void InitTexture_ui() {
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, widthImage, heightImage, 0, GL_RGB, GL_UNSIGNED_BYTE, data2);
 
 	stbi_image_free(data2);
+
+	glBindTexture(GL_TEXTURE_2D, texture_ui[3]);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	unsigned char* data3 = stbi_load("Texture/end1.jpg", &widthImage, &heightImage, &numberOfChannel, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, widthImage, heightImage, 0, GL_RGB, GL_UNSIGNED_BYTE, data3);
+
+	stbi_image_free(data3);
+
+	glBindTexture(GL_TEXTURE_2D, texture_ui[4]);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	unsigned char* data4 = stbi_load("Texture/lose.jpg", &widthImage, &heightImage, &numberOfChannel, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, widthImage, heightImage, 0, GL_RGB, GL_UNSIGNED_BYTE, data4);
+
+	stbi_image_free(data4);
+
+	glBindTexture(GL_TEXTURE_2D, texture_ui[5]);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	unsigned char* data5 = stbi_load("Texture/lose1.jpg", &widthImage, &heightImage, &numberOfChannel, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, widthImage, heightImage, 0, GL_RGB, GL_UNSIGNED_BYTE, data5);
+
+	stbi_image_free(data5);
 
 }
 void InitTexture()

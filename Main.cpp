@@ -7,7 +7,8 @@ extern int Scene;
 extern enum Scene {
 	eIntro = 0,
 	eGame,
-	eEnd
+	eEnd,
+	eReplay
 };
 GLvoid Window_Initializer(int argc, char **argv)
 {
@@ -32,8 +33,8 @@ void main(int argc, char** argv)
 {
 	Window_Initializer(argc, argv);
 	// mtl 조성택꺼는 뒤어 _jo붙음
-	MakeFile("Obj/among_us/among_us.obj", "Obj/among_us/among_us.mtl");
-	//MakeFile("Obj/among_us/among_us.obj", "Obj/among_us/among_us_jo.mtl");
+	//MakeFile("Obj/among_us/among_us.obj", "Obj/among_us/among_us.mtl");
+	MakeFile("Obj/among_us/among_us.obj", "Obj/among_us/among_us_jo.mtl");
 	s_program = make_shaderProgram("vertex.glsl", "fragment.glsl");
 	s_program_ui=make_shaderProgram("vertex_OT.glsl", "fragment_OT.glsl");
 	InitBuffer();

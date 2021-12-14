@@ -19,3 +19,7 @@ void PlayEf(std::string path);
 void removeBg(std::string path);
 void pMotion(int x, int y);
 void Jump();
+void PlayBg_R(std::string path);
+void Sabo();
+void Timer();
+
