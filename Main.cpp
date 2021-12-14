@@ -1,7 +1,14 @@
 ﻿#define	STB_IMAGE_IMPLEMENTATION
 #include "system.h"
-GLint width = 1000, height = 500;
+GLint width = 1024, height = 512;
 GLuint s_program;
+GLuint s_program_ui;
+extern int Scene;
+extern enum Scene {
+	eIntro = 0,
+	eGame,
+	eEnd
+};
 GLvoid Window_Initializer(int argc, char **argv)
 {
 	//--- 윈도우 생성하기
@@ -10,7 +17,7 @@ GLvoid Window_Initializer(int argc, char **argv)
 	glutInitWindowPosition(100, 100); // 윈도우의 위치 지정
 	glutInitWindowSize(width, height); // 윈도우의 크기 지정
 	glutCreateWindow("Example1"); // 윈도우 생성(윈도우 이름)
-
+	Scene = eIntro;
 	//--- GLEW 초기화하기
 	glewExperimental = GL_TRUE;
 	if (glewInit() != GLEW_OK) // glew 초기화
@@ -24,17 +31,20 @@ GLvoid Window_Initializer(int argc, char **argv)
 void main(int argc, char** argv)
 {
 	Window_Initializer(argc, argv);
-	// 세이더 읽어와서 세이더 프로그램 만들기
-	MakeFile("Obj/among_us/among_us.obj", "Obj/among_us/among_us.mtl");
+	// mtl 조성택꺼는 뒤어 _jo붙음
+	//MakeFile("Obj/among_us/among_us.obj", "Obj/among_us/among_us.mtl");
+	MakeFile("Obj/among_us/among_us.obj", "Obj/among_us/among_us_jo.mtl");
 	s_program = make_shaderProgram("vertex.glsl", "fragment.glsl");
-
+	s_program_ui=make_shaderProgram("vertex_OT.glsl", "fragment_OT.glsl");
 	InitBuffer();
 	InitTexture();
+	InitTexture_ui();
 	glEnable(GL_DEPTH_TEST);
 	glutTimerFunc(30, TimerFunction, 1);
 	// 출력 콜백 함수
 	glutMouseFunc(Mouse);
 	glutMotionFunc(Motion);
+	glutPassiveMotionFunc(pMotion);
 	glutKeyboardFunc(Keyboard);	// 키보드 입력
 	glutKeyboardUpFunc(KeyboardUp);
 	glutSpecialFunc(special);

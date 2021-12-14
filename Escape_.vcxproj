@@ -159,6 +159,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\Users\jst99\source\repos\CG_과제\CG_과제\fragment_OT.glsl" />
+    <None Include="..\..\Users\jst99\source\repos\CG_과제\CG_과제\vertex_OT.glsl" />
     <None Include="fragment.glsl" />
     <None Include="vertex.glsl" />
   </ItemGroup>

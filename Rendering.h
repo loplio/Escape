@@ -12,3 +12,8 @@ BOOL isInside(glm::vec2 B);
 void MakeFile(const char* objfile, const char* mtlfile);
 void Mouse(int button, int state, int x, int y);
 void Motion(int x, int y);
+void PlayBg(std::string path);
+void PlayEf(std::string path);
+void removeBg(std::string path);
+void pMotion(int x, int y);
+void Jump();

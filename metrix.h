@@ -14,7 +14,10 @@
 #include <conio.h>
 #include <math.h>
 #include <time.h>
-
+//sound-lib
+#include <Windows.h>
+#include <mmsystem.h>
+#pragma comment(lib, "winmm.lib")
 // gl-library
 #include <gl/glew.h>
 #include <gl/freeglut.h>
