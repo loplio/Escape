@@ -3,7 +3,7 @@
 
 static GLuint shaderID, vertexShader, fragmentShader;
 extern GLuint vao[16], vbo[31], objVao[200], objVbo[200];
-extern GLfloat Box_pos[72][3], TriObj[F_ARRAY][S_ARRAY][24], amongus[34][24], floor_pos[12][3], line[6][3];
+extern GLfloat Box_pos[72][3], TriObj[F_ARRAY][S_ARRAY][24], amongus[34][24], floor_pos[12][3], line[6][3],_2dwindow[48];
 int Tri_Num;
 char* filetobuf(const char* file)
 {
@@ -22,7 +22,42 @@ char* filetobuf(const char* file)
 	buf[length] = 0; // Null terminator
 	return buf; // Return the buffer
 }
+void InitTexture_ui() {
+	extern GLuint texture_ui[3];
+	int widthImage, heightImage, numberOfChannel;
+	stbi_set_flip_vertically_on_load(true);
 
+	glGenTextures(2, texture_ui);
+	glBindTexture(GL_TEXTURE_2D, texture_ui[0]);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	unsigned char* data = stbi_load("Texture/Intro.jpg", &widthImage, &heightImage, &numberOfChannel, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, widthImage, heightImage, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+	stbi_image_free(data);
+
+	glBindTexture(GL_TEXTURE_2D, texture_ui[1]);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	unsigned char* data1 = stbi_load("Texture/intro1.jpg", &widthImage, &heightImage, &numberOfChannel, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, widthImage, heightImage, 0, GL_RGB, GL_UNSIGNED_BYTE, data1);
+
+	stbi_image_free(data1);
+
+	glBindTexture(GL_TEXTURE_2D, texture_ui[2]);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	unsigned char* data2 = stbi_load("Texture/end.jpg", &widthImage, &heightImage, &numberOfChannel, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, widthImage, heightImage, 0, GL_RGB, GL_UNSIGNED_BYTE, data2);
+
+	stbi_image_free(data2);
+
+}
 void InitTexture()
 {
 	extern Mtl* InfoMTL;
@@ -89,6 +124,16 @@ void InitBuffer()		// ���� �����ϰ� ������ �޾
 	glBindVertexArray(vao[1]);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(amongus), amongus, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
+	//ui
+	glBindVertexArray(vao[2]);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(_2dwindow), _2dwindow, GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));

@@ -13,3 +13,10 @@ void MakeFile(const char* objfile, const char* mtlfile);
 void Mouse(int button, int state, int x, int y);
 void Motion(int x, int y);
 void Motion2(int x, int y);
+//=======
+//void PlayBg(std::string path);
+//void PlayEf(std::string path);
+//void removeBg(std::string path);
+//void pMotion(int x, int y);
+//void Jump();
+//>>>>>>> 21a4089286cb6694983e063e2c537f353ff4faf2

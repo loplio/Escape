@@ -14,8 +14,10 @@ glm::vec3 cameraUp(0.0f, 1.0f, 0.0f);
 glm::mat4 view(1.0f);
 glm::vec3 amongPos(CAMERA_X, 0, CAMERA_Z - 240);
 extern GLuint s_program;
+extern GLuint s_program_ui;
 extern int width, height, Tri_Num;
 GLuint texture[IMAGE_N];
+GLuint texture_ui[3];
 GLuint vao[16], vbo[31], objVao[VAO_N], objVbo[VAO_N];
 GLfloat Box_pos[72][3] = {
 	1.0, 1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, 1.0, -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0, 1.0, 1.0,
@@ -31,12 +33,18 @@ GLfloat Box_pos[72][3] = {
 	0.0,1.0,0.0, 0.0,1.0,0.0, 0.0,1.0,0.0, 0.0,1.0,0.0, 0.0,1.0,0.0, 0.0,1.0,0.0,
 	0.0,-1.0,0.0, 0.0,-1.0,0.0, 0.0,-1.0,0.0, 0.0,-1.0,0.0, 0.0,-1.0,0.0, 0.0,-1.0,0.0
 };
-GLfloat _2dwindow[] = {
- 1.0f, 1.0f, 0.0f, // 우측 상단
- 1.0f, -1.0f, 0.0f, // 우측 하단
--1.0f, -1.0f, 0.0f, // 좌측 하단
--1.0f, 1.0f, 0.0f // 좌측 상단
+GLfloat _2dwindow[48] = {
+ -1.0f, -1.0f, 0.0f, 0.0, 0.0, 1.0, 0.0, 0.0,
+1.0f, -1.0f, 0.0f, 0.0, 0.0, 1.0, 1.0, 0.0,
+1.0f, 1.0f, 0.0f, 0.0, 0.0, 1.0, 1.0, 1.0,
+1.0f, 1.0f, 0.0f, 0.0, 0.0, 1.0, 1.0, 1.0,
+-1.0f, 1.0f, 0.0f, 0.0, 0.0, 1.0, 0.0, 1.0,
+-1.0f, -1.0f, 0.0f, 0.0, 0.0, 1.0, 0.0, 0.0
 };
+bool onclick = false;
+bool isJump = false;
+int jPower = 2;
+int jH = 0;
 GLfloat TriObj[F_ARRAY][S_ARRAY][24];
 GLfloat amongus[34][24];
 GLfloat floor_pos[12][3] = { 150.0, 0.0, 150.0, 0.0,1.0,0.0, -150.0, 0.0, 150.0, 0.0,1.0,0.0, -150.0, 0.0, -150.0, 0.0,1.0,0.0, 150.0, 0.0, -150.0, 0.0,1.0,0.0 };
@@ -57,6 +65,12 @@ enum keyDown {
 	R = 90, RB = 135,
 	B = 180, LB = 225,
 	L = 270, LF = 315
+};
+int Scene;
+enum Scene {
+	eIntro = 0,
+	eGame,
+	eEnd
 };
 GLvoid TransformFun()
 {
@@ -89,6 +103,7 @@ GLvoid drawScene() //--- 콜백 함수: 그리기 콜백 함수
 	GLfloat rColor = 0.8, gColor = 0.8, bColor = 0.8;
 	glClearColor(rColor, gColor, bColor, 1.0f); // 바탕색을 ‘blue’ 로 지정
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//<<<<<<< HEAD
 	glUseProgram(s_program);
 	unsigned int transformLocation = glGetUniformLocation(s_program, "transform");
 	unsigned int LightTransformLocation = glGetUniformLocation(s_program, "LightTransform");
@@ -138,7 +153,78 @@ GLvoid drawScene() //--- 콜백 함수: 그리기 콜백 함수
 			glUniform3f(objColorLocation, sphere[n].info.Kd.x, sphere[n].info.Kd.y, sphere[n].info.Kd.z);				// 기본 색상 매칭
 		glDrawArrays(GL_TRIANGLES, 0, sphere[n].face_num * 3);
 		glBindTexture(GL_TEXTURE_2D, 0);
-	}
+//=======
+	//if (Scene == eIntro) {
+	//	glUseProgram(s_program_ui);
+	//	glActiveTexture(GL_TEXTURE0);
+	//	removeBg("Sound/end.mp3");
+	//	PlayBg("Sound/intro.mp3");
+	//	if (onclick) {
+	//		glBindTexture(GL_TEXTURE_2D, texture_ui[1]);
+	//	}
+	//	else
+	//		glBindTexture(GL_TEXTURE_2D, texture_ui[0]);
+	//		glBindVertexArray(vao[2]);
+	//		glDrawArrays(GL_TRIANGLES, 0, 6);
+	//}
+	//else if (Scene == eGame ) {
+	//	
+	//	glUseProgram(s_program);
+	//	unsigned int transformLocation = glGetUniformLocation(s_program, "transform");
+	//	unsigned int LightTransformLocation = glGetUniformLocation(s_program, "LightTransform");
+	//	int lightPosLocation = glGetUniformLocation(s_program, "lightPos");
+	//	int lightColorLocation = glGetUniformLocation(s_program, "lightColor");
+	//	int objColorLocation = glGetUniformLocation(s_program, "objectColor");
+	//	glUniform3f(lightPosLocation, 0.0, 4000.0, 0.0);
+	//	glUniform3f(objColorLocation, 1.0, 1.0, 1.0);
+	//	glUniform3f(lightColorLocation, 1.0, 1.0, 1.0);
+	//	glm::mat4 Rx(1.0f); glm::mat4 Ry(1.0f); glm::mat4 Ry_l(1.0f);
+	//	glm::mat4 T(1.0f); glm::mat4 S(1.0f); glm::mat4 R(1.0f); glm::mat4 L(1.0f); glm::mat4 Init(1.0f);
+	//	Rx = glm::rotate(Rx, glm::radians(axis_x), glm::vec3(1.0f, 0.0f, 0.0f)); Ry = glm::rotate(Ry, glm::radians(axis_y), glm::vec3(0.0f, 1.0f, 0.0f)); Ry_l = glm::rotate(Ry_l, glm::radians(light_axis_y), glm::vec3(0.0f, 1.0f, 0.0f));
+	//	T = glm::translate(T, glm::vec3(shape_focus[1][0], shape_focus[1][1], shape_focus[1][2])); S = glm::scale(S, glm::vec3(1.0f, 1.0f, 1.0f)); Init = glm::translate(Init, glm::vec3(0.0f, 0.0f, 0.0f));
+	//	TransformFun();
+	//	//배경
+	//	L = glm::scale(L, glm::vec3(4.0f, 4.0f, 4.0f));
+	//	glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(L));
+	//	glUniformMatrix4fv(LightTransformLocation, 1, GL_FALSE, glm::value_ptr(R));
+	//	glBindVertexArray(vao[13]);
+	//	glDrawArrays(GL_LINES, 0, 2);
+	//	glDrawArrays(GL_LINES, 2, 2);
+	//	glDrawArrays(GL_LINES, 4, 2);
+	//	glBindVertexArray(vao[6]);
+
+	//	//객체
+	//	glActiveTexture(GL_TEXTURE0);
+	//	glBindTexture(GL_TEXTURE_2D, texture[image_Num + 1]);
+	//	R = glm::translate(R, glm::vec3(amongPos.x, amongPos.y, amongPos.z));
+	//	R = glm::rotate(R, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));			// Among_us
+	//	glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(R));
+	//	glBindVertexArray(vao[1]);
+	//	glDrawArrays(GL_TRIANGLES, 0, 102);
+	//	//R = glm::scale(R, glm::vec3(1.0f, 1.0f, 1.0f));
+	//	R = Init;
+	//	glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(R));
+	//	for (int n = 0; n < Tri_Num; n++) {
+	//		glBindVertexArray(objVao[n]);
+	//		if (sphere[n].info.Index == -1)						// 텍스처 매칭
+	//			glBindTexture(GL_TEXTURE_2D, texture[image_Num]);
+	//		else
+	//			glBindTexture(GL_TEXTURE_2D, texture[sphere[n].info.Index]);
+	//		glUniform3f(objColorLocation, sphere[n].info.Kd.x, sphere[n].info.Kd.y, sphere[n].info.Kd.z);				// 기본 색상 매칭
+	//		glDrawArrays(GL_TRIANGLES, 0, sphere[n].face_num * 3);
+	//		glBindTexture(GL_TEXTURE_2D, 0);
+	//	}
+//>>>>>>> 21a4089286cb6694983e063e2c537f353ff4faf2
+	//}
+	//else if (Scene == eEnd) {
+	//	PlayBg("Sound/end.mp3");
+	//	glUseProgram(s_program_ui);
+	//	glActiveTexture(GL_TEXTURE0);
+	//	glBindTexture(GL_TEXTURE_2D, texture_ui[2]);
+	//	glBindVertexArray(vao[2]);
+	//	glDrawArrays(GL_TRIANGLES, 0, 6);
+	//}
+	//
 	glutSwapBuffers(); // 화면에 출력하기
 }
 BOOL isInside(glm::vec2 B) {
@@ -252,12 +338,34 @@ void Update()
 	AMrad = atan2(-(cameraPos.z - amongPos.z), cameraPos.x - amongPos.x);
 	amongPos.x += AMSPEED*cos(AMrad), amongPos.z -= AMSPEED*sin(AMrad);
 	//printf("cameraPos: %f  %f  %f\n", cameraPos.x, cameraPos.y, cameraPos.z);
+//=======
+//	printf("cameraPos: %f  %f  %f\n", cameraPos.x, cameraPos.y, cameraPos.z);
+//	Jump();
+//	glutTimerFunc(30, TimerFunction, 1);
+//}
+//void Jump() {
+//	if (isJump) {
+//		if (jH < 22) {
+//			jH += jPower;
+//			cameraPos.y = jH, cameraDirection.y = jH;
+//		}
+//		else if (jH == 22) {
+//			isJump = false;
+//		}
+//		
+//	}
+//	else {
+//		if (jH >= 0) {
+//			jH -= jPower;
+//			cameraPos.y = jH, cameraDirection.y = jH;
+//		}
+//	}
+//>>>>>>> 21a4089286cb6694983e063e2c537f353ff4faf2
 }
 void TimerFunction(int value)
 {
 	glutPostRedisplay();
 	Update();
-	glutTimerFunc(30, TimerFunction, 1);
 }
 GLvoid Reshape(int w, int h) //--- 콜백 함수: 다시 그리기 콜백 함수
 {
@@ -267,6 +375,13 @@ GLvoid Reshape(int w, int h) //--- 콜백 함수: 다시 그리기 콜백 함수
 GLvoid Keyboard(unsigned char key, int x, int y)
 {
 	switch (key) {
+	case'l':
+		Scene = eEnd;
+		break;
+	case SPACEBAR:
+		isJump = true;
+		
+		break;
 	case 't':
 		if (!rotate_light) rotate_light = TRUE;
 		else if (rotate_light && light_dir_y == 1) rotate_light = FALSE;
@@ -338,9 +453,7 @@ GLvoid Keyboard(unsigned char key, int x, int y)
 GLvoid KeyboardUp(unsigned char key, int x, int y)
 {
 	switch (key) {
-	case SPACEBAR:
-		cameraPos.y += 10, cameraDirection.y += 10;
-		break;
+	
 	case 'w':
 		if (KeyDownFB == 0) {
 			KeyDownFB = -1;
@@ -411,6 +524,9 @@ void special(int key, int x, int y)
 	case GLUT_KEY_CTRL_L:
 		cameraPos.y -= 10, cameraDirection.y -= 10;
 		break;
+	case GLUT_KEY_CTRL_R:
+		cameraPos.y += 10, cameraDirection.y += 10;
+		break;
 	case GLUT_KEY_LEFT:
 		break;
 	case GLUT_KEY_RIGHT:
@@ -438,10 +554,33 @@ void MakeFile(const char* objfile, const char* mtlfile)
 }
 void Mouse(int button, int state, int x, int y)
 {
+	float Posx = (float)(x - (float)width / 2.0f) * (float)(1.0f / (float)(width / 2.0f));
+	float Posy = -(float)(y - (float)height / 2.0f) * (float)(1.0f / (float)(height / 2.0f));
+	printf("%0.3f, %0.3f\n", Posx, Posy);
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
 		Mouse_x = (2.0 * x / width - 1.0) * 10, Mouse_y = -(2.0 * y / height - 1.0) * 10;
 		Picking(x, y);
 		//printf("%d %d\n", x, y);
+//=======
+//		if (Scene ==eIntro||Scene==eEnd){
+//			if (Posx > -0.088 && Posx < 0.078 && Posy > -0.227 && Posy < 0.078) {
+//				if (Scene == eIntro) {
+//					removeBg("Sound/intro.mp3");
+//					PlayBg("Sound/main.mp3");
+//					Scene = eGame;
+//				}
+//					
+//				else
+//					Scene = eIntro;
+//			}
+//		}
+//
+//		if (button == GLUT_LEFT_BUTTON && state == GLUT_UP) {
+//
+//
+//
+//		}
+//>>>>>>> 21a4089286cb6694983e063e2c537f353ff4faf2
 	}
 	else if (state == GLUT_UP) {
 		buffer_rad1 += rad_p1;
@@ -462,3 +601,70 @@ void Motion2(int x, int y)
 	//printf("AA\n");
 	//Picking(x, y);
 }
+//=======
+//void pMotion(int x, int y) {
+//	float Posx = (float)(x - (float)width / 2.0f) * (float)(1.0f / (float)(width / 2.0f));
+//	float Posy = -(float)(y - (float)height / 2.0f) * (float)(1.0f / (float)(height / 2.0f));
+//	if (Posx > -0.088 && Posx < 0.078 && Posy > -0.227 && Posy < 0.078) {
+//		onclick = true;
+//	}
+//	else {
+//		onclick = false;
+//	}
+//
+//	glutPostRedisplay();
+//}
+//void PlayBg(std::string path)
+//{
+//
+//
+//	std::string str;
+//	str += "play ";
+//	str += path;
+//	//str += " repeat";
+//
+//	// 자료형 변환 해줘야함 ;;;
+//	// string to tchar 로..
+//	int slength = (int)str.length() + 1;
+//	int len = MultiByteToWideChar(CP_ACP, 0, str.c_str(), slength, 0, 0);
+//	TCHAR* buf = new TCHAR[len];
+//	MultiByteToWideChar(CP_ACP, 0, str.c_str(), slength, buf, len);
+//	TCHAR* r(buf);
+//
+//
+//	mciSendString(r, 0, 0, 0);
+//}
+//void removeBg(std::string path)
+//{
+//
+//
+//	std::string str;
+//	str += "close ";
+//	str += path;
+//
+//	// 자료형 변환 해줘야함 ;;;
+//	// string to tchar 로..
+//	int slength = (int)str.length() + 1;
+//	int len = MultiByteToWideChar(CP_ACP, 0, str.c_str(), slength, 0, 0);
+//	TCHAR* buf = new TCHAR[len];
+//	MultiByteToWideChar(CP_ACP, 0, str.c_str(), slength, buf, len);
+//	TCHAR* r(buf);
+//
+//
+//	mciSendString(r, 0, 0, 0);
+//}
+//void PlayEf(std::string path)
+//{
+//
+//	// 자료형 변환 해줘야함 ;;;
+//	// string to tchar 로..
+//	int slength = (int)path.length() + 1;
+//	int len = MultiByteToWideChar(CP_ACP, 0, path.c_str(), slength, 0, 0);
+//	TCHAR* buf = new TCHAR[len];
+//	MultiByteToWideChar(CP_ACP, 0, path.c_str(), slength, buf, len);
+//	TCHAR* r(buf);
+//
+//	// 효과음 파일 재생
+//	sndPlaySound(r, SND_ASYNC);
+//>>>>>>> 21a4089286cb6694983e063e2c537f353ff4faf2
+//}

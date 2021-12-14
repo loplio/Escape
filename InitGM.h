@@ -3,6 +3,7 @@
 #include "stb_image.h"
 
 void InitTexture();
+void InitTexture_ui();
 void InitBuffer();
 void make_vertexShaders(const char* v_glsl);
 void make_fragmentShaders(const char* f_glsl);
