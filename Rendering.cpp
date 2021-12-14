@@ -1,9 +1,10 @@
 #include "Rendering.h"
 #include "ReadObj.h"
 #define SPEED 5
+#define AMSPEED 3
 #define SPACEBAR 32
 #define CAMERA_X 1106
-#define CAMERA_Y -5
+#define CAMERA_Y 35
 #define CAMERA_Z -855
 glm::vec3 cameraPos(CAMERA_X, CAMERA_Y, CAMERA_Z);
 glm::vec3 cameraDirection(CAMERA_X, CAMERA_Y, CAMERA_Z - 1);
@@ -43,12 +44,14 @@ GLfloat line[6][3] = { 0.0,-400.0,0.0, 0.0,400.0,0.0, -400.0,0.0,0.0, 400.0,0.0,
 GLfloat shape_focus[16][3] = { 0.0,0.0,0.0, 12.0,5.0,0.0, 0.0,0.1,0.0, 0.0,0.35,0.0, -0.15,0.75,0.0, 0.15,0.75,0.0, };
 object* sphere;
 Mtl* InfoMTL;
-BOOL state_timer = TRUE, rotate_object, rotate_light, state_walk; //RT - Rect, Tri  SL - Solid, Line
+BOOL state_timer = TRUE, rotate_object, rotate_light, state_walk, state_button; //RT - Rect, Tri  SL - Solid, Line
 char dir_z, dir_y, dir_x, light_dir_y = 1;	//x,y,z 방향
 float axis_x, axis_y, light_axis_y, cameraRt_axis_y, cameraRt_axis_x;
 float Mouse_x, Mouse_y, buffer_rad1, buffer_rad2, rad_p1, rad_p2, DirCameraX, DirCameraZ;
+float AMrad;
 int special_key, KeyDownRL, KeyDownFB, keyRad;
 int image_Num, mtl_Num;
+float fovy, aspect, n, f;
 enum keyDown {
 	F = 0, RF = 45,
 	R = 90, RB = 135,
@@ -64,15 +67,16 @@ GLvoid TransformFun()
 	glm::mat4 projection(1.0f);
 	glm::mat4 mvPos(1.0f);
 	glm::vec3 vPos(0.0f, 0.0f, 20.0f);
-	projection = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 50000.0f);
+	fovy = glm::radians(45.0f), aspect = (float)width / (float)height, n = 0.1f, f = 50000.0f;
+	projection = glm::perspective(fovy, aspect, n, f);
 	projection = glm::rotate(projection, glm::radians(cameraRt_axis_y), glm::vec3(1.0f, 0.0f, 0.0f));
 	projection = glm::rotate(projection, glm::radians(cameraRt_axis_x), glm::vec3(0.0f, 1.0f, 0.0f));
-	projection = glm::translate(projection, glm::vec3(0.0f, -30.0f, -20.0f));
+	//projection = glm::translate(projection, glm::vec3(0.0f, -30.0f, -20.0f));
 	//projection = glm::rotate(projection, glm::radians(10.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	//projection = glm::rotate(projection, glm::radians(-45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	//mvPos = glm::rotate(mvPos, glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	//mvPos = glm::rotate(mvPos, glm::radians(-10.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	mvPos = glm::translate(mvPos, vPos);
+	//mvPos = glm::translate(mvPos, vPos);
 	mvPos = glm::rotate(mvPos, glm::radians(-cameraRt_axis_x), glm::vec3(1.0f, 0.0f, 0.0f));
 	mvPos = glm::rotate(mvPos, glm::radians(-cameraRt_axis_y), glm::vec3(0.0f, 1.0f, 0.0f));
 	vPos = glm::vec3(mvPos * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
@@ -113,7 +117,8 @@ GLvoid drawScene() //--- 콜백 함수: 그리기 콜백 함수
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture[image_Num+1]);
 	R = glm::translate(R, glm::vec3(amongPos.x, amongPos.y, amongPos.z));
-	R = glm::rotate(R, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));			// Among_us
+	//printf("rad:%f\n", AMrad);
+	R = glm::rotate(R, AMrad, glm::vec3(0.0f, 1.0f, 0.0f));			// Among_us
 	glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(R));
 	glBindVertexArray(vao[1]);
 	glDrawArrays(GL_TRIANGLES, 0, 102);
@@ -126,7 +131,11 @@ GLvoid drawScene() //--- 콜백 함수: 그리기 콜백 함수
 			glBindTexture(GL_TEXTURE_2D, texture[image_Num]);
 		else
 			glBindTexture(GL_TEXTURE_2D, texture[sphere[n].info.Index]);
-		glUniform3f(objColorLocation, sphere[n].info.Kd.x, sphere[n].info.Kd.y, sphere[n].info.Kd.z);				// 기본 색상 매칭
+		if (!strcmp(sphere[n].group_name, "Mesh1716") && state_button) {
+			glUniform3f(objColorLocation, 1.0f, 0.0f, 0.0f);
+		}
+		else
+			glUniform3f(objColorLocation, sphere[n].info.Kd.x, sphere[n].info.Kd.y, sphere[n].info.Kd.z);				// 기본 색상 매칭
 		glDrawArrays(GL_TRIANGLES, 0, sphere[n].face_num * 3);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
@@ -192,13 +201,57 @@ BOOL isInside(glm::vec2 B) {
 	//printf("crosses:%d\n", crosses);
 	return crosses % 2 > 0;
 }
+//BOOL Collide()
+//{
+//
+//}
+glm::dvec3 Picking(int xCursor, int yCursor)
+{
+	//카메라 공간 광선의 방향벡터
+	glm::vec3 ray;
+	glm::vec3 button(1099.0f, 12.0f, 878.0f);
+	glm::vec3 buttonLen(13.0f, 2.0f, 15.0f);
+	ray.x = ((2 * (float)xCursor / (float)width) - 1) * tan(fovy / 2) * aspect;
+	ray.y = (-(2 * (float)yCursor / (float)height) + 1) * tan(fovy / 2);
+	ray.z = -1;
+	float len = sqrt(pow(ray.x, 2) + 1);
+	float len2 = sqrt(pow(ray.x, 2) + pow(ray.y, 2) + 1);
+	float seta = atan2(ray.z, ray.x);
+	float seta2 = atan2(ray.y, len);
+	float rad = seta * 180 / 3.14 + cameraRt_axis_x;
+	float rad2 = seta2 * 180 / 3.14 - cameraRt_axis_y;
+	//printf("cos:%f sin:%f\n", cos(glm::radians(rad)), sin(glm::radians(rad)));
+	ray.x = len * cos(glm::radians(rad));
+	ray.y = len2 * sin(glm::radians(rad2));
+	ray.z = len * sin(glm::radians(rad));
+	//printf("seta:%f\n", seta * 180 / 3.14 + cameraRt_axis_x + 90);
+	//printf("ray.x:%f ray.z:%f\n", ray.x, ray.z);
+
+	//printf("%f %f tan:%f aspect:%f\n", (float)xCursor / (float)width, (float)yCursor / (float)height + 1, tan(fovy / 2),aspect);
+	//printf("%f %f %f\n", ray.x, ray.y, ray.z);
+	glm::vec3 camera = cameraPos;
+	for (int i = 0; i < 100; i++) {
+		camera.x += ray.x, camera.y += ray.y, camera.z += ray.z;
+		//printf("x:%f < %f  < %f, y:%f < %f  < %f, z:%f < %f  < %f\n", button.x, camera.x, button.x + buttonLen.x, button.y, camera.y, button.y + buttonLen.y, button.z, -camera.z, button.z + buttonLen.z);
+		if (button.x < camera.x && camera.x < button.x + buttonLen.x && button.y < camera.y && camera.y < button.y + buttonLen.y && button.z < -camera.z && -camera.z < button.z + buttonLen.z) {
+			printf("Collide!!\n\n");
+			state_button = TRUE;
+			break;
+		}
+		//printf("ray: %f %f %f\n", camera.x, camera.y, camera.z);
+	}
+	
+ 	return glm::fvec3(1.0f);
+}
 void Update()
 {
 	if (rotate_object) cameraRt_axis_y += 5;
 	if (rotate_light) light_axis_y += 3 * light_dir_y;
 	if (isInside(glm::vec2(cameraPos.x + DirCameraX, -(cameraPos.z + DirCameraZ+20))))
 		if (state_walk) cameraPos.x += DirCameraX, cameraPos.z += DirCameraZ, cameraDirection.x += DirCameraX, cameraDirection.z += DirCameraZ;
-	printf("cameraPos: %f  %f  %f\n", cameraPos.x, cameraPos.y, cameraPos.z);
+	AMrad = atan2(-(cameraPos.z - amongPos.z), cameraPos.x - amongPos.x);
+	amongPos.x += AMSPEED*cos(AMrad), amongPos.z -= AMSPEED*sin(AMrad);
+	//printf("cameraPos: %f  %f  %f\n", cameraPos.x, cameraPos.y, cameraPos.z);
 }
 void TimerFunction(int value)
 {
@@ -387,6 +440,8 @@ void Mouse(int button, int state, int x, int y)
 {
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
 		Mouse_x = (2.0 * x / width - 1.0) * 10, Mouse_y = -(2.0 * y / height - 1.0) * 10;
+		Picking(x, y);
+		//printf("%d %d\n", x, y);
 	}
 	else if (state == GLUT_UP) {
 		buffer_rad1 += rad_p1;
@@ -401,4 +456,9 @@ void Motion(int x, int y)
 	cameraRt_axis_x = rad_p1 + buffer_rad1;
 	cameraRt_axis_y = rad_p2 + buffer_rad2;
 	//printf("cameraRt_axis_x:%f\n", cameraRt_axis_x);
+}
+void Motion2(int x, int y)
+{
+	//printf("AA\n");
+	//Picking(x, y);
 }

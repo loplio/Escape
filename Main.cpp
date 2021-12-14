@@ -35,6 +35,7 @@ void main(int argc, char** argv)
 	// 출력 콜백 함수
 	glutMouseFunc(Mouse);
 	glutMotionFunc(Motion);
+	//glutPassiveMotionFunc(Motion2);
 	glutKeyboardFunc(Keyboard);	// 키보드 입력
 	glutKeyboardUpFunc(KeyboardUp);
 	glutSpecialFunc(special);

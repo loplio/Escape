@@ -12,3 +12,4 @@ BOOL isInside(glm::vec2 B);
 void MakeFile(const char* objfile, const char* mtlfile);
 void Mouse(int button, int state, int x, int y);
 void Motion(int x, int y);
+void Motion2(int x, int y);
