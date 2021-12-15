@@ -23,4 +23,5 @@ void Jump();
 void PlayBg_R(std::string path);
 void Sabo();
 void Timer();
+BOOL Come();
 

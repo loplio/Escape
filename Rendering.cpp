@@ -307,6 +307,12 @@ BOOL Collide()
 		return TRUE;
 	return FALSE;
 }
+BOOL Come()
+{
+	if (sqrt(pow(cameraPos.x - amongPos.x, 2) + pow(cameraPos.z - amongPos.z, 2)) < 100)
+		return TRUE;
+	return FALSE;
+}
 int Picking(int xCursor, int yCursor)
 {
 	//카메라 공간 광선의 방향벡터
@@ -369,6 +375,9 @@ void Update()
 		PlayBg("Sound/kill.mp3");
 		Scene = eReplay;
 	};
+	if (Come()) {
+		PlayBg("Sound/come.mp3");
+	}
 	if (rotate_object) cameraRt_axis_y += 5;
 	if (rotate_light) light_axis_y += 3 * light_dir_y;
 	if (isInside(glm::vec2(cameraPos.x + DirCameraX, -(cameraPos.z + DirCameraZ+20))))
@@ -377,7 +386,7 @@ void Update()
 		AMrad = atan2(-(cameraPos.z - amongPos.z), cameraPos.x - amongPos.x);
 		amongPos.x += amongSpeed * cos(AMrad), amongPos.z -= amongSpeed * sin(AMrad);
 	}//	printf("cameraPos: %f  %f  %f\n", cameraPos.x, cameraPos.y, cameraPos.z);
-	//Jump();
+	Jump();
 	Sabo();
 	Timer();
 	glutTimerFunc(30, TimerFunction, 1);
