@@ -3,7 +3,7 @@
 
 static GLuint shaderID, vertexShader, fragmentShader;
 extern GLuint vao[16], vbo[31], objVao[200], objVbo[200];
-extern GLfloat Box_pos[72][3], TriObj[F_ARRAY][S_ARRAY][24], amongus[34][24], floor_pos[12][3], line[6][3],_2dwindow[48];
+extern GLfloat Box_pos[72][3], TriObj[F_ARRAY][S_ARRAY][24], amongus[34][24], line[6][3],_2dwindow[48];
 int Tri_Num;
 char* filetobuf(const char* file)
 {

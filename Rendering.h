@@ -10,6 +10,7 @@ void TimerFunction(int value);
 void Update();
 BOOL isInside(glm::vec2 B);
 BOOL Collide();
+void InitFun();
 int Picking(int xCursor, int yCursor);
 void MakeFile(const char* objfile, const char* mtlfile);
 void Mouse(int button, int state, int x, int y);

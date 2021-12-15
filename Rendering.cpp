@@ -49,12 +49,11 @@ float t = 0;
 int sec = 0;
 int jPower = 2;
 int jH = 0;
-GLfloat rColor = 0.8, gColor = 0.8, bColor = 0.8;
+GLfloat rColor = 0.1, gColor = 0.1, bColor = 0.1;
 GLfloat light_R = 1.0, light_G = 1.0, light_B = 1.0;
 GLfloat light_Y = 4000.0;
 GLfloat TriObj[F_ARRAY][S_ARRAY][24];
 GLfloat amongus[34][24];
-GLfloat floor_pos[12][3] = { 150.0, 0.0, 150.0, 0.0,1.0,0.0, -150.0, 0.0, 150.0, 0.0,1.0,0.0, -150.0, 0.0, -150.0, 0.0,1.0,0.0, 150.0, 0.0, -150.0, 0.0,1.0,0.0 };
 GLfloat line[6][3] = { 0.0,-400.0,0.0, 0.0,400.0,0.0, -400.0,0.0,0.0, 400.0,0.0,0.0, 0.0,0.0,-400.0, 0.0,0.0,400.0 };
 GLfloat shape_focus[16][3] = { 0.0,0.0,0.0, 12.0,5.0,0.0, 0.0,0.1,0.0, 0.0,0.35,0.0, -0.15,0.75,0.0, 0.15,0.75,0.0, };
 object* sphere;
@@ -134,7 +133,7 @@ GLvoid drawScene() //--- 콜백 함수: 그리기 콜백 함수
 		int objColorLocation = glGetUniformLocation(s_program, "objectColor");
 		glUniform3f(lightPosLocation, 0.0, 4000.0, 0.0);
 		glUniform3f(objColorLocation, 1.0, 1.0, 1.0);
-		glUniform3f(lightColorLocation, 1.0, 1.0, 1.0);
+		glUniform3f(lightColorLocation, light_R, light_G, light_B);
 		glm::mat4 Rx(1.0f); glm::mat4 Ry(1.0f); glm::mat4 Ry_l(1.0f);
 		glm::mat4 T(1.0f); glm::mat4 S(1.0f); glm::mat4 R(1.0f); glm::mat4 L(1.0f); glm::mat4 Init(1.0f);
 		Rx = glm::rotate(Rx, glm::radians(axis_x), glm::vec3(1.0f, 0.0f, 0.0f)); Ry = glm::rotate(Ry, glm::radians(axis_y), glm::vec3(0.0f, 1.0f, 0.0f)); Ry_l = glm::rotate(Ry_l, glm::radians(light_axis_y), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -168,6 +167,7 @@ GLvoid drawScene() //--- 콜백 함수: 그리기 콜백 함수
 				glBindTexture(GL_TEXTURE_2D, texture[sphere[n].info.Index]);
 			if (state_picking) {
 				if (!strcmp(sphere[n].group_name, "Mesh1716") && state_button) {
+					printf("------------------------%d\n", n);
 					sphere[n].info.Kd.x = 1.0f, sphere[n].info.Kd.y = 0.0f, sphere[n].info.Kd.z = 0.0f;
 					glUniform3f(objColorLocation, sphere[n].info.Kd.x, sphere[n].info.Kd.y, sphere[n].info.Kd.z);
 				}
@@ -198,6 +198,7 @@ GLvoid drawScene() //--- 콜백 함수: 그리기 콜백 함수
 			glBindTexture(GL_TEXTURE_2D, texture_ui[2]);
 		glBindVertexArray(vao[2]);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
+		InitFun();
 	}
 	else if (Scene == eReplay) {
 		PlayBg("Sound/lose.mp3");
@@ -210,11 +211,36 @@ GLvoid drawScene() //--- 콜백 함수: 그리기 콜백 함수
 			glBindTexture(GL_TEXTURE_2D, texture_ui[4]);
 		glBindVertexArray(vao[2]);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
+		InitFun();
 	}
 
 
 		
 	glutSwapBuffers(); // 화면에 출력하기
+}
+void InitFun()
+{
+	isJump = false;
+	SG = false;
+	isSabo = false;
+	t = 0;
+	sec = 0;
+	jPower = 2;
+	jH = 0;
+	cameraPos.x = CAMERA_X, cameraPos.y = CAMERA_Y, cameraPos.z = CAMERA_Z;
+	cameraDirection.x = CAMERA_X, cameraDirection.y = CAMERA_Y, cameraDirection.z = CAMERA_Z - 1;
+	amongPos.x = CAMERA_X, amongPos.y = 0, amongPos.z = CAMERA_Z - 240;
+	rColor = 0.1, gColor = 0.1, bColor = 0.1;
+	light_R = 1.0, light_G = 1.0, light_B = 1.0;
+	light_Y = 4000.0;
+	sphere[1748].info.Kd.x = 0.0667f, sphere[1748].info.Kd.y = 0.0980f, sphere[1748].info.Kd.z = 0.1569f;
+	state_timer = TRUE, rotate_object = FALSE, rotate_light = FALSE, state_walk = FALSE, state_button = FALSE, state_picking = FALSE; //RT - Rect, Tri  SL - Solid, Line
+	dir_z = 0, dir_y = 0, dir_x = 0, light_dir_y = 1;	//x,y,z 방향
+	axis_x=0, axis_y=0, light_axis_y=0, cameraRt_axis_y=0, cameraRt_axis_x=0;
+	Mouse_x=0, Mouse_y=0, buffer_rad1=0, buffer_rad2=0, rad_p1=0, rad_p2=0, DirCameraX=0, DirCameraZ=0;
+	AMrad=0;
+	special_key=0, KeyDownRL=0, KeyDownFB=0, keyRad=0;
+	Bent_n = 0;
 }
 BOOL isInside(glm::vec2 B) {
 	//crosses는 점q와 오른쪽 반직선과 다각형과의 교점의 개수
@@ -309,7 +335,7 @@ int Picking(int xCursor, int yCursor)
 	for (int i = 0; i < 100; i++) {
 		camera.x += ray.x, camera.y += ray.y, camera.z += ray.z;
 		if (button.x < camera.x && camera.x < button.x + buttonLen.x && button.y < camera.y && camera.y < button.y + buttonLen.y && button.z < -camera.z && -camera.z < button.z + buttonLen.z) {
-			printf("Collide!!\n\n");
+			//printf("Collide!!\n\n");
 			return 1;
 		}
 		for (int j = 0; j < 14; j++) {
@@ -352,49 +378,53 @@ void Update()
 		AMrad = atan2(-(cameraPos.z - amongPos.z), cameraPos.x - amongPos.x);
 		amongPos.x += AMSPEED * cos(AMrad), amongPos.z -= AMSPEED * sin(AMrad);
 	}//	printf("cameraPos: %f  %f  %f\n", cameraPos.x, cameraPos.y, cameraPos.z);
-	Jump();
+	//Jump();
 	Sabo();
 	Timer();
 	glutTimerFunc(30, TimerFunction, 1);
 }
 void Jump() {
 	if (isJump) {
-		if (jH < 22) {
+		if (jH < 50) {
 			jH += jPower;
 			cameraPos.y = jH, cameraDirection.y = jH;
 		}
-		else if (jH == 22) {
+		else if (jH == 50) {
 			isJump = false;
 		}
 		
 	}
 	else {
-		if (jH >= 0) {
+		if (jH >= 30) {
 			jH -= jPower;
 			cameraPos.y = jH, cameraDirection.y = jH;
 		}
 	}
 }
 void Timer() {
-	if (SG) {
+	if (SG && state_button) {
 		t += 0.03;
+		printf("Timer:%f\n", t);
 		if (t >= 60) {
 			Scene = eEnd;
 			SG = false;
 			t = 0;
+		}
+		if (t > 30 && !isSabo) {
+			isSabo = true;
 		}
 	}
 
 }
 void Sabo() {
 	if (isSabo) {
-		if (sec % 6 == 0) {
-			rColor = 1.0, gColor = 0.0, bColor = 0.0;
-			light_R = 1.0, light_G = 0.0, light_B = 0.0;
+		if (sec % 25 < 12) {
+			rColor = 0.3, gColor = 0.05, bColor = 0.05;
+			light_R = 0.3, light_G = 0.1, light_B = 0.1;
 		}
 		else {
-			rColor = 0.0, gColor = 0.0, bColor = 0.0;
-			light_R = 0.0, light_G = 0.0, light_B = 0.0;
+			rColor = 0.1, gColor = 0.1, bColor = 0.1;
+			light_R = 0.5, light_G = 0.5, light_B = 0.5;
 		}
 		sec++;
 	}
@@ -412,10 +442,10 @@ GLvoid Reshape(int w, int h) //--- 콜백 함수: 다시 그리기 콜백 함수
 GLvoid Keyboard(unsigned char key, int x, int y)
 {
 	switch (key) {
-	case'l':
+	case'i':
 		Scene = eEnd;
 		break;
-	case'L':
+	case'l':
 		Scene = eReplay;
 		break;
 	case'j':
@@ -428,7 +458,7 @@ GLvoid Keyboard(unsigned char key, int x, int y)
 		break;
 	case'J':
 		isSabo = false;
-		rColor = 0.8, gColor = 0.8, bColor = 0.8;
+		rColor = 0.1, gColor = 0.1, bColor = 0.1;
 		light_R = 1.0, light_G = 1.0, light_B = 1.0;
 		removeBg("Sound/bee.mp3");
 		break;
@@ -664,10 +694,12 @@ void Mouse(int button, int state, int x, int y)
 					Scene = eGame;
 				}
 				else if (Scene == eEnd) {
+					removeBg("Sound/bee.mp3");
 					removeBg("Sound/end.mp3");
 					Scene = eIntro;
 				}
 				else if (Scene == eReplay) {
+					removeBg("Sound/bee.mp3");
 					removeBg("Sound/lose.mp3");
 					cameraPos.x = 1106;
 					cameraPos.y = 30;
@@ -717,7 +749,7 @@ void pMotion(int x, int y) {
 			state_picking = TRUE;
 		else if (!pick && state_picking)
 			state_picking = FALSE;
-		printf("statePicking:%d\n", state_picking);
+		//printf("statePicking:%d\n", state_picking);
 	}
 }
 void PlayBg(std::string path)
