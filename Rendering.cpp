@@ -1,7 +1,6 @@
 #include "Rendering.h"
 #include "ReadObj.h"
 #define SPEED 5
-#define AMSPEED 4
 #define SPACEBAR 32
 #define CAMERA_X 1106
 #define CAMERA_Y 30
@@ -45,7 +44,7 @@ bool onclick = false;
 bool isJump = false;
 bool SG = false;
 bool isSabo = false;
-float t = 0;
+float t = 0, amongSpeed = 3.6;
 int sec = 0;
 int jPower = 2;
 int jH = 0;
@@ -167,7 +166,6 @@ GLvoid drawScene() //--- 콜백 함수: 그리기 콜백 함수
 				glBindTexture(GL_TEXTURE_2D, texture[sphere[n].info.Index]);
 			if (state_picking) {
 				if (!strcmp(sphere[n].group_name, "Mesh1716") && state_button) {
-					printf("------------------------%d\n", n);
 					sphere[n].info.Kd.x = 1.0f, sphere[n].info.Kd.y = 0.0f, sphere[n].info.Kd.z = 0.0f;
 					glUniform3f(objColorLocation, sphere[n].info.Kd.x, sphere[n].info.Kd.y, sphere[n].info.Kd.z);
 				}
@@ -227,6 +225,7 @@ void InitFun()
 	sec = 0;
 	jPower = 2;
 	jH = 0;
+	amongSpeed = 3.6;
 	cameraPos.x = CAMERA_X, cameraPos.y = CAMERA_Y, cameraPos.z = CAMERA_Z;
 	cameraDirection.x = CAMERA_X, cameraDirection.y = CAMERA_Y, cameraDirection.z = CAMERA_Z - 1;
 	amongPos.x = CAMERA_X, amongPos.y = 0, amongPos.z = CAMERA_Z - 240;
@@ -376,7 +375,7 @@ void Update()
 		if (state_walk) cameraPos.x += DirCameraX, cameraPos.z += DirCameraZ, cameraDirection.x += DirCameraX, cameraDirection.z += DirCameraZ;
 	if (state_button) {
 		AMrad = atan2(-(cameraPos.z - amongPos.z), cameraPos.x - amongPos.x);
-		amongPos.x += AMSPEED * cos(AMrad), amongPos.z -= AMSPEED * sin(AMrad);
+		amongPos.x += amongSpeed * cos(AMrad), amongPos.z -= amongSpeed * sin(AMrad);
 	}//	printf("cameraPos: %f  %f  %f\n", cameraPos.x, cameraPos.y, cameraPos.z);
 	//Jump();
 	Sabo();
@@ -405,13 +404,16 @@ void Timer() {
 	if (SG && state_button) {
 		t += 0.03;
 		printf("Timer:%f\n", t);
-		if (t >= 60) {
+		if (t >= 50) {
 			Scene = eEnd;
 			SG = false;
 			t = 0;
 		}
-		if (t > 30 && !isSabo) {
+		if (t > 25 && !isSabo) {
 			isSabo = true;
+		}
+		if (t > 25) {
+			amongSpeed = 3.8 + t * 0.02;
 		}
 	}
 
@@ -705,6 +707,7 @@ void Mouse(int button, int state, int x, int y)
 					cameraPos.y = 30;
 					cameraPos.z = -855;
 					PlayBg("Sound/main.mp3");
+					SG = true;
 					Scene = eGame;
 				}
 			}
